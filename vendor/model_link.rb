@@ -15,8 +15,6 @@ module ModelLink
   end
 
   def link_ref
-    p self
-    p trait
     [id, *title.scan(/\w+/)].join('-')
   end
 end
