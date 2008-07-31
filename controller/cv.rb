@@ -9,19 +9,18 @@ class CVController < Controller
   def create
     redirect_referrer unless logged_in? and request.post?
 
-    title, file = request[:title, :file]
-    mime, temp = file[:type], file[:tempfile]
-
-    cv = CV.new(:title => title, :user_id => user.id, :mime => mime)
-
-    a2t = Any2Text.new(temp.path)
-    cv.text = a2t.try_convert
-    txt, ext = a2t.save_both("cv/#{user.id}_#{cv.text.hash}")
-    cv.txt = txt
-    cv.original = ext
-
+    cv = CV.from_request(user, request)
     save(cv)
   end
+
+  def edit(cv_id)
+    redirect_referrer unless logged_in? and request.post?
+    cv = CV[cv_id.to_i]
+    cv.public = request[:public]
+    pp cv.public
+    save(cv)
+  end
+
 
   def read(id)
     @cv = CV[id.to_i]
@@ -45,7 +44,12 @@ class CVController < Controller
 
   def save(cv)
     if cv.valid?
-      cv.save
+      if cv.user_id == user.id
+        cv.save
+      else
+        flash[:bad] = 'Permission denied'
+      end
+
       redirect_referrer
     else
       flash[:bad] = cv.errors.inspect

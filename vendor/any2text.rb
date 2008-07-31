@@ -4,12 +4,14 @@ class Any2Text
   MIME_ID = {
     'application/pdf' => :pdf,
     'application/msword' => :doc,
+    'application/octet-stream' => :doc, # oh well...
     'application/vnd.oasis.opendocument.text' => :odt,
   }
 
   class Error < StandardError; end
   class PopenError < Error; end
   class ConversionError < Error; end
+  class CannotConvert < Error; end
 
   attr_accessor :path, :mime
 
@@ -39,12 +41,14 @@ class Any2Text
         self.mime = nil
       end
     end
+
+    raise CannotConvert
   end
 
   # Convert before modifying the file to write to, this gives us the chance to
   # fail without serious side-effects
   def save_both(to)
-    text = convert
+    text = try_convert unless mime
     FileUtils.mkdir_p(File.dirname(to))
 
     to_txt = to + '.txt'

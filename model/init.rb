@@ -70,7 +70,31 @@ end
 end
 
 Company.each do |company|
+  next if company.text
   company.text = Faker::Lorem.paragraph
   company.name = Faker::Company.name
   company.save
+end
+
+Dir['res/CV.*'].each do |cv|
+  req = {
+    :title => cv,
+    :file => {
+      :type => `file -bi #{cv}`.strip,
+      :tempfile => File.open(cv),
+    }
+  }
+
+  begin
+    cv = CV.from_request(admin, req)
+  rescue Any2Text::CannotConvert
+    next
+  end
+
+  if cv.valid?
+    cv.save
+  else
+    pp cv.errors
+    exit
+  end
 end
