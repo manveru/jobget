@@ -54,12 +54,8 @@ end
   job.starts_at = Date.today + rand(356)
   job.location = Faker::Address::city
 
-  text = Faker::Lorem.paragraphs
-  text << ''
-  (3 + rand(10)).times do
-    text << "* #{Faker::Company.bs}"
-  end
-  job.text = text.join("\n")
+  job.text = Faker::Lorem.paragraphs(3 + rand(3)).join("\n")
+  job.skills = Array.new(rand(6)){ Faker::Company.bs }.join("\n")
 
   company = Company.all.sort_by{ rand }.first
   job.company_id = company.id
