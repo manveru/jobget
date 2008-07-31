@@ -1,0 +1,12 @@
+.join
+  %form{:method => :POST}
+    %fieldset
+      %legend Create Account
+      = @user.form_field(:email)
+      = @user.form_field(:password, :password)
+      = @user.form_field(:password_confirmation, :password)
+      = @user.form_field(:tos, :boolean)
+      = @user.form_field(:newsletter)
+      .buttons
+        %input{:type => :reset, :class => :reset}
+        %input{:type => :submit, :class => :submit, :value => 'Create'}

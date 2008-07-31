@@ -1,0 +1,21 @@
+- unless logged_in?
+  .section
+    %h4 Login
+    %form{:action => R(UserController, :login), :method => :POST}
+      .pair
+        %label{:for => :email} Email:
+        %input{:type => :text, :name => :email, :id => :email}
+      .pair
+        %label{:for => :password} Password:
+        %input{:type => :password, :name => :password, :id => :password}
+        %a{:href => :forgot} Forgot Password?
+      %input{:type => :submit, :value => 'Login', :class => :button}
+  .section
+    %h4= "Join #{conf.title}"
+    %a{:href => R(UserController, :join), :class => :button} Sign Up
+.section
+  %h4 Post Job
+  %p
+    = "Post a new Job on #{conf.title}."
+    Targeted, results-based, risk-free hiring.
+  %a{:href => R(JobController, :post), :class => :button} Post job

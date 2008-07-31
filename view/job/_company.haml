@@ -1,0 +1,12 @@
+.section
+  %h4= h(@company.name)
+  %dl
+    %dt Year Founded
+    %dd= @company.founded
+    %dt No. of Employees
+    %dd= @company.employees
+    %dt About Us
+    %dd= @company.text
+  %a{:href => R(MainController, :search, :q => @company.name, :only => :company)}
+    More Jobs from
+    = h(@company.name)

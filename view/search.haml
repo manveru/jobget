@@ -1,0 +1,20 @@
+.search
+  %h2= "#{@results.size} Results for '#{h(@q)}' from #{Job.available.count} Jobs"
+  %p
+    Restrict Search
+    / optimize
+    - case request[:only]
+    - when 'company'
+      %a{:href => Rs(:search, :q => @q)} by any
+      %a{:href => '#'} by company
+      %a{:href => Rs(:search, :q => @q, :only => :job)} by job
+    - when 'job'
+      %a{:href => Rs(:search, :q => @q)} by any
+      %a{:href => Rs(:search, :q => @q, :only => :company)} by company
+      %a{:href => '#'} by job
+    - else
+      %a{:href => '#'} by any
+      %a{:href => Rs(:search, :q => @q, :only => :company)} by company
+      %a{:href => Rs(:search, :q => @q, :only => :job)} by job
+  - @results.each do |job|
+    = render_template('_job.haml', :job => job)

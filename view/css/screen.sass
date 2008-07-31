@@ -1,0 +1,158 @@
+body
+  :font-family Helvetica, Arial, 'Liberation Sans', FreeSans, sans-serif
+
+form
+  input
+    :background #fff
+    :border 1px solid black
+    :padding 0.2em
+  input.submit, input.reset
+    :background #fff
+    :border 1px solid black
+  textarea
+    :width 40em
+    :height 20em
+  fieldset
+    :border 1px solid #ddd
+    .pair
+      :clear both
+      :padding 0.3em
+      label
+        :width 11em
+        :float left
+      input
+    .buttons
+      :clear both
+      :padding 1em
+
+a.button
+  :background #ddd
+  :color #00f
+  :text-decoration none
+  :text-align center
+  :display block
+  :margin 0.2em
+  :padding 0.2em
+
+.top, .middle, .bottom
+  :clear both
+
+.top
+  h1
+    :float left
+    :color #000
+    :text-align center
+    :margin 0
+    :margin-bottom 1em
+  .menu
+    :float right
+
+.bottom
+  :width 100%
+  :text-align center
+
+.middle
+  .sidebar
+    :float right
+    :width 25%
+    .section
+      :padding 0.5em 1em 1em 1em
+      :margin-bottom 0.5em
+      :border 1px solid #ddd
+      fieldset
+        :border 0
+        :margin 0
+        :padding 0
+      h4
+        :margin 0
+        :margin-bottom 0.5em
+  .content
+    :float left
+    :width 70%
+    :border 1px solid #ddd
+    :padding 1em
+    h2
+      :margin 0 0 1em 0
+    .latest, .featured
+      :width 50%
+      h2
+        :text-align center
+      .job
+        :margin 0.5em
+        :padding 1em
+        :background #fafafa
+        :border 1px solid #ddd
+    .featured
+      :float left
+      :background #ddfddd
+      .job
+        :background #eefeee
+    .latest
+      :float right
+      :background #fdfddd
+      .job
+        :background #fefeee
+
+.submenu
+  :margin-bottom 1em
+  a
+    :background #efefef
+    :padding 0.5em
+    :color #00f
+    :text-decoration none
+
+.cv-upload
+  .pair
+    label
+      :width auto
+      :float none
+    input
+      :width auto
+      :float none
+      :display block
+
+.flash-bad, .flash-good
+  :background #ff0
+  :padding 1em
+  :margin -0.5em -1em -1em -1em
+.flash-bad
+  :background #faa
+.flash-good
+  :background #afa
+
+.cvs
+  .cv
+    :border 1px solid #ddd
+    :margin-bottom 1em
+    dl
+      dt
+        :margin-left 0em
+      dd
+        :margin-top -1em
+        :margin-left 7em
+
+.related-jobs
+  a
+    :display block
+    :margin-top 1em
+
+.job
+  :margin 0.5em
+  :padding 1em
+  :background #fafafa
+  :border 1px solid #ddd
+
+.job_read
+  .job
+    h2
+      :margin -0.5em
+      :padding 0.5em
+      :border-bottom 1px solid #ddd
+    img
+      :float right
+      :margin-top 1em
+
+form
+  .error
+    :color #f00
+    :margin 1em

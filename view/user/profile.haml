@@ -1,0 +1,14 @@
+= part(:submenu, UserController)
+
+%h2= "Profile of #{h(user.name || user.email)}"
+
+%form{:method => :POST, :action => R(UserController, :update)}
+  %fieldset
+    %legend Update Profile
+    .pair
+      %label{:for => :name} Name:
+      %input{:type => :text, :name => :name, :value => user.name, :id => :name}
+    .pair
+      %label{:for => :location} Location:
+      %input{:type => :location, :name => :location, :value => user.location, :id => :location}
+    = part :buttons, MainController, :value => 'Update profile'

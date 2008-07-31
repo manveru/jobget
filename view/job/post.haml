@@ -1,0 +1,18 @@
+.submenu
+  %a{:href => R(JobController, :manage)} Manage your Jobs
+  - unless @job.new?
+    %a{:href => @job.to_read} Public View
+%form{:method => :POST}
+  %fieldset
+    %legend Post Job
+    = @job.form_field(:title)
+    = @job.form_field(:internal)
+    = @job.form_field(:location)
+    = @job.form_field(:contract, %w[Permament Freelance])
+    = @job.form_field(:salary_interval, %w[Hourly Daily Weekly Monthly Yearly])
+    = @job.form_field(:salary_low)
+    = @job.form_field(:salary_high)
+    = @job.form_field(:public)
+    = @job.form_field(:open)
+    ~ @job.form_field(:text)
+    = part :buttons, MainController, :value => 'Post Job'

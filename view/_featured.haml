@@ -1,0 +1,4 @@
+.featured
+  %h2 Featured
+  - @featured.each do |job|
+    = part(:job, MainController, :job => job)

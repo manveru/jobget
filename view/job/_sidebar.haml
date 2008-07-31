@@ -1,0 +1,15 @@
+- if @job and not @job.new?
+  = part(:company, JobController, :company => @job.company)
+  .section.related-jobs
+    %h4 Related Jobs
+    - related = @job.related
+    - if related.empty?
+      No related jobs found
+    - related.each do |rel|
+      %a{:href => rel.to_read}= rel.title
+.section
+  %h4 Post Job
+  %p
+    = "Post a new Job on #{conf.title}."
+    Targeted, results-based, risk-free hiring.
+  %a{:href => R(JobController, :post), :class => :button} Post job

@@ -1,0 +1,13 @@
+.job
+  %a{:href => @job.to_read}= h(@job.title)
+  = " @ #{@job.company.name}"
+  %dl
+    %dt Salary:
+    %dd= @job.salary
+    %dt Location:
+    %dd= @job.location
+    %dd Updated at:
+    %dt= @job.updated_at
+    %dd Created at:
+    %dt= @job.created_at
+  %p= @job.preview

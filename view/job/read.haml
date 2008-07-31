@@ -1,0 +1,31 @@
+- company = @job.company
+
+.job_read
+  - if company == user.company
+    .submenu
+      %a{:href => R(JobController, :manage)} Manage your Jobs
+      = part :crud_menu, JobController, :job => @job
+  .job
+    %h2= @job.title
+    %img.company{:src => company.to_logo}
+
+    %dl
+      %dt Contract Type:
+      %dd= @job.contract
+
+      %dt Salary:
+      %dd= @job.salary
+
+      %dt Start Date:
+      %dd= @job.starts_at
+
+      %dt Location
+      %dd= @job.location
+
+    = Maruku.new(@job.text).to_html
+
+  .apply
+    - if user.applied_to?(@job)
+      You already applied for this Job
+    - elsif @job.open
+      %a{:href => @job.to_apply} Apply for this Job

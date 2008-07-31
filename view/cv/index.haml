@@ -1,0 +1,17 @@
+= part(:submenu, UserController)
+
+%h2 Your CVs
+
+.cvs
+  - if @cvs.empty?
+    You don't have any CVs yet, get started by uploading one in the form in the sidebar.
+  - @cvs.each do |cv|
+    .cv
+      %dl
+        %dt Title:
+        %dd
+          %a{:href => cv.to_read}= h(cv.title)
+        %dt Preview:
+        %dd= cv.preview
+        %dt Last Updated:
+        %dd= cv.updated_formatted

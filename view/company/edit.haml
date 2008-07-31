@@ -1,0 +1,16 @@
+= part(:submenu, UserController)
+
+%h2= "Edit #{h(@company.name || 'your company')}"
+
+%form{:method => :POST, :enctype => 'multipart/form-data'}
+  %fieldset
+    %legend Edit Company
+    = @company.form_field(:name)
+    = @company.form_field(:founded, (1800..Date.today.year))
+    = @company.form_field(:employees, %w[1-10 11-50 51-100 101-500 501-1000 1000+])
+    .pair
+      %label{:for => :logo} Company Logo:
+      %input{:type => :file, :name => :logo, :id => :logo}
+    %img{:src => @company.to_logo}
+    = @company.form_field(:text)
+    = part :buttons, MainController, :value => 'Update Company'

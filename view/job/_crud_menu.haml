@@ -1,0 +1,11 @@
+%a{:href => @job.to_edit} Edit
+%a{:href => @job.to_delete} Delete
+- if @job.public
+  %a{:href => @job.to_state(:public => false)} Make Private
+- else
+  %a{:href => @job.to_state(:public => true)} Make Public
+- if @job.open
+  %a{:href => @job.to_state(:open => false)} Close for applications
+- else
+  %a{:href => @job.to_state(:open => true)} Open for applications
+

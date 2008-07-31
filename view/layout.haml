@@ -1,0 +1,38 @@
+!!! XML
+!!!
+%html
+  %head
+    %title= conf.title
+    = css('screen')
+  %body
+    .top
+      %a{:href => '/'}
+        %h1= conf.title
+      .menu
+        - if logged_in?
+          %a{:href => R(UserController, :logout)} Logout
+          %a{:href => R(UserController, :profile)}= user.email
+        - else
+          %a{:href => R(UserController, :join)} Join
+          %a{:href => R(UserController, :login)} Login
+
+    .middle
+      .content
+        = @content
+      .sidebar
+        = flashbox("<div class='section'><p class='flash-%key'>%value</p></div>")
+        .section
+          %form{:action => Rs(:search)}
+            %fieldset
+              %label{:for => :search}
+                %h4 Search for a job
+              %input{:type => :text, :id => :search, :name => :q}
+        = part(:sidebar)
+
+    .bottom
+      %a{:href => '/help'} Help
+      %a{:href => '/contact'} Contact
+      %a{:href => '/privacy_policy'} Privacy Policy
+      %a{:href => '/tos'} Terms of Use
+      %br/
+      &copy; 2008 by manveru
