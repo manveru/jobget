@@ -5,24 +5,28 @@ class JobController < Controller
     @job = job_for(job_id)
   end
 
+  def browse
+    @jobs = Job.available.all
+  end
+
   def apply(job_id)
     call R(CVController, :/) unless logged_in?
     @job = job_for job_id
     cvs_for user
   end
 
-  # TODO:
-  #   * handle case of invalid CV id
-  #   * handle case of duplicate submit
   def submit_cv(job_id)
     call R(UserController, :login) unless logged_in?
     job = job_for(job_id)
 
     if cv = CV[:id => request[:cv], :user_id => user.id]
-      cv.add_job(job)
+      if cv.jobs.include?(job)
+        flash[:bad] = 'You already submitted a CV for this job'
+      else
+        cv.add_job(job)
+      end
     end
 
-    # TODO: make sure this CV belongs to this user
     redirect Rs(:read, job.id)
   end
 

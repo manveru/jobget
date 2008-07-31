@@ -19,8 +19,10 @@
       %dt Start Date:
       %dd= @job.starts_at
 
-      %dt Location
+      %dt Location:
       %dd= @job.location
+
+      = part :skills, JobController, :skills => @job.skill_list
 
     = Maruku.new(@job.text).to_html
 

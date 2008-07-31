@@ -8,6 +8,4 @@
       .pair
         %label{:for => :password} Password:
         %input{:type => :password, :name => :password, :value => @password}
-      .buttons
-        %input{:type => :reset, :class => :reset}
-        %input{:type => :submit, :class => :submit, :value => 'Login'}
+      = part :buttons, MainController, :value => 'Login'

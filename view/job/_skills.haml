@@ -1,0 +1,6 @@
+- unless @skills.empty?
+  %dt Skills:
+  %dd
+    %ul.skills
+      - @skills.each do |skill|
+        %li= h skill

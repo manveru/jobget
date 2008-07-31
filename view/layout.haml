@@ -9,12 +9,15 @@
       %a{:href => '/'}
         %h1= conf.title
       .menu
-        - if logged_in?
-          %a{:href => R(UserController, :logout)} Logout
-          %a{:href => R(UserController, :profile)}= user.email
-        - else
-          %a{:href => R(UserController, :join)} Join
-          %a{:href => R(UserController, :login)} Login
+        .auth
+          - if logged_in?
+            %a{:href => R(UserController, :logout)} Logout
+            %a{:href => R(UserController, :profile)}= user.email
+          - else
+            %a{:href => R(UserController, :join)} Join
+            %a{:href => R(UserController, :login)} Login
+        .nav
+          %a{:href => R(JobController, :browse)} Browse jobs
 
     .middle
       .content
@@ -26,7 +29,8 @@
             %fieldset
               %label{:for => :search}
                 %h4 Search for a job
-              %input{:type => :text, :id => :search, :name => :q}
+              %input{:type => :hidden, :name => :only, :value => request[:only] || :any}
+              %input{:type => :text, :id => :search, :name => :q, :value => request[:q]}
         = part(:sidebar)
 
     .bottom

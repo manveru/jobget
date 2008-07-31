@@ -91,32 +91,6 @@ class Any2Text
     raise ConversionError, ex
   end
 
-=begin
-  # TODO: Replace with documatic or some other better library?
-  def anti_odt(path)
-    require 'zip/zip'
-    require 'hpricot'
-
-    lines = []
-
-    Zip::ZipFile.open(path) do |z|
-      if content = z.find{|f| f.name == 'content.xml' }
-        content_stream = z.get_input_stream(content)
-        xml = Hpricot(content_stream.read)
-        (xml/'text:p').each do |paragraph|
-          lines << paragraph.inner_text
-        end
-      else
-        raise "Couldn't find content.xml inside #{path}"
-      end
-    end
-
-    lines.join("\n")
-  rescue
-    raise ConversionError
-  end
-=end
-
   def anti_odt(path)
     popen('odt2txt', path)
   rescue PopenError => ex

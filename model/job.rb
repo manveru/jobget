@@ -1,6 +1,6 @@
 class Job < Sequel::Model
   FORM = [
-    :title, :text,
+    :title, :text, :skills,
     :internal, :contract, :location,
     :salary_interval, :salary_low, :salary_high,
     :public, :open
@@ -8,6 +8,7 @@ class Job < Sequel::Model
 
   FORM_LABEL = {
     :title => 'Job Title',
+    :skills => 'List of skills (one line per skill)',
     :internal => 'Internal ID',
     :location => 'Job Location',
     :contract => 'Contract Type',
@@ -27,6 +28,7 @@ class Job < Sequel::Model
 
     varchar :title
     string :text
+    string :skills
 
     varchar :internal
     varchar :contract
@@ -88,17 +90,19 @@ class Job < Sequel::Model
     open and public
   end
 
-  # TODO: Optimize
   def self.search(*words)
     terms = words.map{|word| "%#{word}%" }
 
     available.filter{|job|
-      job.title.like(*terms) | job.text.like(*terms)
+      job.title.like(*terms) |
+        job.text.like(*terms) |
+        job.skills.like(*terms)
     }.all
   end
 
   def related(n = 5)
-    words = title.scan(/\w+/)
+    words = title.to_s.scan(/\w+/)
+    words += skills.to_s.scan(/\w+/)
     (Job.search(*words) - [self]).first(n)
   end
 
@@ -122,6 +126,10 @@ class Job < Sequel::Model
 
   def created_formatted
     created_at.strftime('%Y-%m-%d')
+  end
+
+  def skill_list
+    skills.to_s.split(/[\n\r]+/)
   end
 
   # Links
