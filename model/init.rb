@@ -27,7 +27,7 @@ else
   exit
 end
 
-5.times do
+(6 - User.count).times do
   name = Faker::Name.name
   email = Faker::Internet.email(name)
 
@@ -42,7 +42,7 @@ end
   end
 end
 
-100.times do
+(100 - Job.count).times do
   job = Job.new
   job.title = Faker::Company.catch_phrase
   job.featured = 0.42 > rand
