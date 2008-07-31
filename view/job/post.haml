@@ -1,7 +1,7 @@
 .submenu
   %a{:href => R(JobController, :manage)} Manage your Jobs
   - unless @job.new?
-    %a{:href => @job.to_read} Public View
+    = @job.href('Public View', :read)
 %form{:method => :POST}
   %fieldset
     %legend Post Job

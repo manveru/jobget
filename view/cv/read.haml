@@ -1,5 +1,5 @@
 .submenu
   %a{:href => R(CVController)} Your CVs
-  %a{:href => @cv.to_download, :target => :_blank} Download original
+  %a{:href => @cv.to(:download), :target => :_blank} Download original
 %h2= @cv.title
 %p.cv= nl2br h(@cv.text)

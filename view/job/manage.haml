@@ -10,8 +10,9 @@
     %a{:href => R(JobController, :post)} Post your first job.
   - @jobs.each do |job|
     .job
-      %a{:href => job.to_read}= h(job.title)
-      = " @ #{@company.name}"
+      = job.href(job.title, :read)
+      @
+      = @company.href(@company.name, :search)
       %dl
         %dt Salary:
         %dd= job.salary

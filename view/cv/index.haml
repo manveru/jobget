@@ -10,7 +10,7 @@
       %dl
         %dt Title:
         %dd
-          %a{:href => cv.to_read}= h(cv.title)
+          = cv.href(cv.title, :read)
         %dt Preview:
         %dd= cv.preview
         %dt Last Updated:

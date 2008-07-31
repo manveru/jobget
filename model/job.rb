@@ -134,31 +134,7 @@ class Job < Sequel::Model
 
   # Links
 
-  include Ramaze::Helper::Link
-
-  def to_apply
-    R(JobController, :apply, link_ref)
-  end
-
-  def to_read
-    R(JobController, :read, link_ref)
-  end
-
-  def to_state(args = {})
-    R(JobController, :state, link_ref, args)
-  end
-
-  def to_edit
-    R(JobController, :edit, link_ref)
-  end
-
-  def to_delete
-    R(JobController, :delete, link_ref)
-  end
-
-  def link_ref
-    [id, *title.scan(/\w+/)].join('-')
-  end
+  include ModelLink
 
   # Forms
 

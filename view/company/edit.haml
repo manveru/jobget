@@ -11,6 +11,6 @@
     .pair
       %label{:for => :logo} Company Logo:
       %input{:type => :file, :name => :logo, :id => :logo}
-    %img{:src => @company.to_logo}
+    %img{:src => @company.to(:logo)}
     = @company.form_field(:text)
     = part :buttons, MainController, :value => 'Update Company'

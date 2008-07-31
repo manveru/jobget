@@ -53,14 +53,14 @@ class Company < Sequel::Model
 
   # Links
 
-  include Ramaze::Helper::Link
+  include ModelLink
 
   def to_logo
     "/logo/#{self.id}#{logo_ext}"
   end
 
   def to_search
-    R(SearchController, :q => name, :only=> :company)
+    R(SearchController, :q => name, :only => :company)
   end
 
   include FormField::Model

@@ -74,18 +74,12 @@ class CV < Sequel::Model
 
   # Links
 
-  include Ramaze::Helper::Link
+  include ModelLink
 
   def to_download
     ext = Any2Text::MIME_ID[mime]
     R(CVController, :download, link_ref + ".#{ext}")
   end
 
-  def to_read
-    R(CVController, :read, link_ref)
-  end
-
-  def link_ref
-    [id, *title.scan(/\w+/)].join('-')
-  end
+  include FormField::Model
 end

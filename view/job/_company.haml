@@ -7,6 +7,4 @@
     %dd= @company.employees
     %dt About Us
     %dd= @company.text
-  %a{:href => @company.to_search}
-    More Jobs from
-    = h(@company.name)
+  = @company.href("More Jobs from #{@company.name}", :search)

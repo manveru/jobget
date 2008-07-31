@@ -45,7 +45,7 @@ class JobController < Controller
       @job.save
       company.add_job(@job)
       flash[:good] = 'Job created'
-      redirect @job.to_read
+      redirect @job.to(:read)
     else
       flash[:bad] = @job.errors.inspect
       redirect_referrer
@@ -70,7 +70,7 @@ class JobController < Controller
       job.save
 
       flash[:good] = "'#{h job.title}' is #{done}"
-      redirect job.to_read
+      redirect job.to(:read)
     else
       flash[:bad] = "The requested action is not allowed"
       redirect_referrer

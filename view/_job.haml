@@ -1,13 +1,13 @@
 .job
   - company = @job.company
-  %a{:href => @job.to_read}= h(@job.title)
-  = "@"
-  %a{:href => company.to_search}= company.name
+  = @job.href(@job.title, :read)
+  @
+  = company.href(company.name, :search)
   %dl
     %dt Salary:
     %dd= @job.salary
     %dt Location:
-    %dd= @job.location
+    %dd= h @job.location
     = part :skills, JobController, :skills => @job.skill_list
 
 

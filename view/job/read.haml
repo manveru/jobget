@@ -7,7 +7,7 @@
       = part :crud_menu, JobController, :job => @job
   .job
     %h2= @job.title
-    %img.company{:src => company.to_logo}
+    %img.company{:src => company.to(:logo)}
 
     %dl
       %dt Contract Type:
@@ -30,4 +30,4 @@
     - if user.applied_to?(@job)
       You already applied for this Job
     - elsif @job.open
-      %a{:href => @job.to_apply} Apply for this Job
+      %a{:href => @job.to(:apply)} Apply for this Job
