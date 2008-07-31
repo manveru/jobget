@@ -108,4 +108,10 @@ class User < Sequel::Model
   end
 
   include FormField::Model
+
+  # View
+
+  def public_name
+    name || email[/^(.*)@/, 1]
+  end
 end

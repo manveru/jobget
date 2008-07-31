@@ -17,6 +17,14 @@ class SearchController < Controller
     @results.uniq!
   end
 
+  def cv
+    if cv = request[:cv]
+      @results = CV.search(cv).all
+    else
+      @results = []
+    end
+  end
+
   private
 
   def search_any

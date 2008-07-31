@@ -1,12 +1,20 @@
 require 'vendor/any2text'
 
 class CV < Sequel::Model
+  FORM_LABEL = {
+    :public => 'CV can be searched by other users',
+  }
+
   set_schema do
     primary_key :id
 
     varchar :title
-    varchar :mime
     string :text
+
+    boolean :public
+
+    # Storage
+    varchar :mime
 
     # File locations
     varchar :txt

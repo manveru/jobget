@@ -1,8 +1,9 @@
-.section
-  %h4 Refine Search
-  - @by.each do |by|
-    - if @only == by
-      = "Search by #{by}"
-    - else
-      %a{:href => Rs(:search, :q => @q, :only => by)}= "Search by #{by}"
-    %br/
+- if @by
+  .section
+    %h4 Refine Search
+    - @by.each do |by|
+      - if @only == by
+        = "Search by #{by}"
+      - else
+        %a{:href => Rs(:search, :q => @q, :only => by)}= "Search by #{by}"
+      %br/

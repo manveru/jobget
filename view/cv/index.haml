@@ -15,3 +15,6 @@
         %dd= cv.preview
         %dt Last Updated:
         %dd= cv.updated_formatted
+      %form{:method => :POST, :action => cv.to(:edit)}
+        = cv.form_field(:public)
+        = part :buttons, MainController, :value => 'Change'

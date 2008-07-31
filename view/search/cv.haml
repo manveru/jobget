@@ -1,0 +1,4 @@
+%h2= "Found #{@results.size} CVs from #{CV.searchable.count}"
+- @results.each do |cv|
+  %p
+    %a{:href => cv.to(:read)}= "#{h cv.title} &mdash; #{h cv.user.public_name}"
