@@ -16,9 +16,8 @@ class Controller < Ramaze::Controller
 
   def part(name, controller = nil, *args)
     controller ||= Ramaze::Action.stack[0].controller
-    view_root = Ramaze::Global.root/controller.view_root
-    root = view_root ? view_root.first : Ramaze::Global.view_root/controller.mapping
-    render_template("#{root}/_#{name}.haml", *args)
+    template = Ramaze::Global.root / controller.resolve_template("_#{name}")
+    render_template(template, *args)
   end
 end
 
