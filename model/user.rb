@@ -10,7 +10,6 @@ class User < Sequel::Model
     :newsletter => 'I want to receive updates by email'
   }
 
-
   set_schema do
     primary_key :id
 
@@ -105,6 +104,30 @@ class User < Sequel::Model
         given_job.id == job.id
       end
     end
+  end
+
+  def cvs_sent
+    job_cv = {}
+
+    cvs.each do |cv|
+      cv.jobs.each do |job|
+        job_cv[job] = cv
+      end
+    end
+
+    job_cv
+  end
+
+  def cvs_got
+    cv_job = {}
+
+    company.jobs.each do |job|
+      job.cvs.each do |cv|
+        cv_job[cv] = job
+      end
+    end
+
+    cv_job
   end
 
   include FormField::Model
