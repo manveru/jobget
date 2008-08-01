@@ -25,12 +25,18 @@
       .sidebar
         = flashbox("<div class='section'><p class='flash-%key'>%value</p></div>")
         .section
-          %form{:action => Rs(:search)}
+          %form{:action => R(SearchController)}
             %fieldset
               %label{:for => :search}
                 %h4 Search for a job
               %input{:type => :hidden, :name => :only, :value => request[:only] || :any}
               %input{:type => :text, :id => :search, :name => :q, :value => request[:q]}
+        .section
+          %form{:action => R(SearchController, :cv)}
+            %fieldset
+              %label{:for => :search_cv}
+                %h4 Search for a CV
+              %input{:type => :text, :id => :search_cv, :name => :cv, :value => request[:cv]}
         = part(:sidebar)
 
     .bottom
