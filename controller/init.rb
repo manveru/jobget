@@ -16,8 +16,13 @@ class Controller < Ramaze::Controller
 
   def part(name, controller = nil, *args)
     controller ||= Ramaze::Action.stack[0].controller
-    template = Ramaze::Global.root / controller.resolve_template("_#{name}")
-    render_template(template, *args)
+
+    if res = controller.resolve_template("_#{name}")
+      template = Ramaze::Global.root/res
+      render_template(template, *args)
+    else
+      ''
+    end
   end
 end
 
