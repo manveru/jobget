@@ -2,12 +2,14 @@ class CVController < Controller
   map '/cv'
 
   def index
-    call(R(UserController, :login)) unless logged_in?
+    must_login 'to view your CVs'
+
     @cvs = user.cvs
   end
 
   def create
-    redirect_referrer unless logged_in? and request.post?
+    must_login 'to create a new CV'
+    must_post 'to create a new CV'
 
     cv = CV.from_request(user, request)
     save(cv)

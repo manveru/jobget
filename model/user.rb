@@ -17,6 +17,12 @@ class User < Sequel::Model
     varchar :email
     varchar :crypt # hashed password
 
+    # If a user has sent the forgot form this will contain a hashed value that
+    # is sent to the email address.
+    # The link contained in the email will log the user in by using this hash
+    # so he can change the password.
+    varchar :reset_hash
+
     varchar :location
 
     boolean :newsletter
@@ -92,11 +98,58 @@ class User < Sequel::Model
 
   attr_accessor :password, :password_confirmation, :tos
 
+  # Reset Password
+
+  include Ramaze::Helper::Link
+
+  def reset_password
+    link = create_hash_link
+    mail_text = format_mail :forgot_password,
+                            :forgot_link => link,
+                            :name => public_name
+
+    Ramaze::EmailHelper.send "manveru@localhost", # email,
+      "Password reset for #{email}",
+      mail_text
+  end
+
+  def format_mail(name, variables_given)
+    filename = "mail/#{name}"
+    erb = ERB.new(File.read(filename))
+    erb.filename = filename
+
+    @config = Configuration.for(:jobget)
+    variables_given.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
+
+    erb.result(binding)
+  end
+
+  def create_hash_link
+    c = Configuration.for(:jobget)
+    hash = [email, Time.now.to_f, rand].join
+    hash = Digest::SHA1.hexdigest(hash)
+
+    self.reset_hash = hash
+    save
+
+    link = R(UserController, :forgot_login, :email => email, :hash => hash)
+    link = URI(link)
+    link.host = c.domain
+    link.scheme = 'http'
+    link
+  end
+
+  # Modify Profile
+
   def profile_update(request)
     name, location = request[:name, :location]
     self.name = name
     self.location = location
   end
+
+  # TODO: produce performant SQL
 
   def applied_to?(given_job)
     cvs.any? do |cv|

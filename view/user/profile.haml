@@ -10,5 +10,12 @@
       %input{:type => :text, :name => :name, :value => user.name, :id => :name}
     .pair
       %label{:for => :location} Location:
-      %input{:type => :location, :name => :location, :value => user.location, :id => :location}
+      %input{:type => :text, :name => :location, :value => user.location, :id => :location}
     = part :buttons, MainController, :value => 'Update profile'
+
+%form{:method => :POST, :action => R(UserController, :update_password)}
+  %fieldset
+    %legend Change Password
+    = user.form_field(:password, :password)
+    = user.form_field(:password_confirmation, :password)
+    = part :buttons, MainController, :value => 'Change Password'

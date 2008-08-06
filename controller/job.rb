@@ -6,23 +6,27 @@ class JobController < Controller
   end
 
   def browse
-    @jobs = Job.available.all
+    @jobs = Job.available
+    nav @jobs
   end
 
   def apply(job_id)
-    call R(CVController, :/) unless logged_in?
+    must_login 'before applying for this job'
+
     @job = job_for job_id
     cvs_for user
   end
 
   def submit_cv(job_id)
-    call R(UserController, :login) unless logged_in?
+    must_login 'before submitting a CV'
+
     job = job_for(job_id)
 
     if cv = CV[:id => request[:cv], :user_id => user.id]
       if cv.jobs.include?(job)
         flash[:bad] = 'You already submitted a CV for this job'
       else
+        flash[:good] = 'Submitted CV'
         cv.add_job(job)
       end
     end
@@ -31,7 +35,7 @@ class JobController < Controller
   end
 
   def post
-    call R(UserController, :login) unless logged_in?
+    must_login 'before posting a job'
 
     @job = Job.from_request(request)
     @job.company = company = user.company
@@ -53,7 +57,7 @@ class JobController < Controller
   end
 
   def state(job_id)
-    call R(UserController, :login) unless logged_in?
+    must_login 'before changing state of job'
 
     if job = Job[:company_id => user.company.id, :id => job_id.to_i]
       if publicity = request[:public]
@@ -78,14 +82,15 @@ class JobController < Controller
   end
 
   def manage
-    call R(UserController, :login) unless logged_in?
+    must_login 'before managing your jobs'
 
     @company = user.company
     @jobs = @company.jobs.reverse
   end
 
   def edit(job_id)
-    call R(UserController, :login) unless logged_in?
+    must_login 'before editing this job'
+
     @job = job_for(job_id)
 
     if @job.company == user.company
@@ -104,7 +109,7 @@ class JobController < Controller
   template :edit, :post
 
   def delete(job_id)
-    call R(UserController, :login) unless logged_in?
+    must_login 'before deleting this job'
 
     if job = Job[:company_id => user.company.id, :id => job_id.to_i]
       job.delete

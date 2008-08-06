@@ -15,6 +15,7 @@ class SearchController < Controller
     end
 
     @results.uniq!
+    nav @results
   end
 
   def cv

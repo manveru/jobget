@@ -11,13 +11,20 @@
       .menu
         .auth
           - if logged_in?
+            Logged in as
+            %a{:href => R(UserController, :profile)}= user.public_name
             %a{:href => R(UserController, :logout)} Logout
-            %a{:href => R(UserController, :profile)}= user.email
           - else
             %a{:href => R(UserController, :join)} Join
             %a{:href => R(UserController, :login)} Login
         .nav
           %a{:href => R(JobController, :browse)} Browse jobs
+          - if logged_in?
+            %a{:href => R(UserController, :profile)} Profile
+            %a{:href => R(CVController)} CVs
+            %a{:href => R(ApplicationController)} Applications
+            %a{:href => R(CompanyController, :edit)} Company
+            %a{:href => R(JobController, :manage)} Jobs    
 
     .middle
       .content

@@ -1,4 +1,6 @@
 %h2= "Browsing #{@jobs.size} Jobs"
 
-- @jobs.each do |job|
+= @pager.navigation
+- @pager.each do |job|
   = part :job, MainController, :job => job
+= @pager.navigation

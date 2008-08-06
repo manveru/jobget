@@ -2,6 +2,8 @@
 
 %h3 Received
 %ul
+  - if @got.empty?
+    You haven't received any applications yet.
   - @got.each do |cv, job|
     %li
       = h cv.user.public_name
@@ -11,6 +13,8 @@
       = job.href(job.title, :read)
 %h3 Sent
 %ul
+  - if @sent.empty?
+    You haven't applied to any jobs yet.
   - @sent.each do |job, cv|
     %li
       You applied with

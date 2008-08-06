@@ -24,6 +24,24 @@ class Controller < Ramaze::Controller
       ''
     end
   end
+
+  def must_login(message, target = nil)
+    return if logged_in?
+    flash[:bad] = "You have to login #{message}"
+    call target || R(UserController, :login)
+  end
+
+  def must_post(message, target = nil)
+    return if request.post?
+    flash[:bad] = "Request should be POST #{message}"
+    target ? redirect(target) : redirect_referrer
+  end
+
+  def nav(dataset, limit = 5)
+    require 'vendor/sequel_paginator'
+    page = (request[:pager] || 1).to_i
+    @pager = Paginator.new(dataset, page, limit)
+  end
 end
 
 acquire 'controller/*.rb'

@@ -1,0 +1,8 @@
+.forgot
+  %form{:method => :POST}
+    %fieldset
+      %legend Forgot password
+      .pair
+        %label{:for => :email} E-mail:
+        %input{:type => :text, :name => :email, :value => @email}
+      = part :buttons, MainController, :value => 'Reset my password'

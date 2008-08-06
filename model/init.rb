@@ -16,16 +16,16 @@ Company.create_join Job
 CV.create_join User
 CV.create_join Job
 
+check_save = lambda{|obj|
+  obj.valid? ? obj.save : (pp obj.errors; exit(1))
+}
+
 conf_admin = Configuration.for(:jobget).admin
-admin = User.new_encrypted(:email => conf_admin.email,
+admin = User.new_encrypted(:email    => conf_admin.email,
+                           :name     => conf_admin.name,
                            :password => conf_admin.password,
                            :location => conf_admin.location)
-if admin.valid?
-  admin.save
-else
-  pp admin.errors
-  exit
-end
+check_save[admin]
 
 (6 - User.count).times do
   name = Faker::Name.name
@@ -34,12 +34,7 @@ end
   user = User.new_encrypted(:name => name,
                             :email => email,
                             :password => 'letmein')
-  if user.valid?
-    user.save
-  else
-    p user.errors
-    exit
-  end
+  check_save[user]
 end
 
 (100 - Job.count).times do
@@ -61,13 +56,8 @@ end
   company = Company.all.sort_by{ rand }.first
   job.company_id = company.id
 
-  if job.valid?
-    job.save
-    company.add_job(job)
-  else
-    pp job.errors
-    exit
-  end
+  check_save[job]
+  company.add_job(job)
 end
 
 Company.each do |company|
@@ -88,14 +78,10 @@ Dir['res/CV.*'].each do |cv|
 
   begin
     cv = CV.from_request(admin, req)
-  rescue Any2Text::CannotConvert
+  rescue Any2Text::CannotConvert => ex
+    puts ex
     next
   end
 
-  if cv.valid?
-    cv.save
-  else
-    pp cv.errors
-    exit
-  end
+  check_save[cv]
 end
