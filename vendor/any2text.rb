@@ -6,12 +6,14 @@ class Any2Text
     'application/msword' => :doc,
     'application/octet-stream' => :doc, # oh well...
     'application/vnd.oasis.opendocument.text' => :odt,
+    'text/html' => :html,
+    'text/plain' => :txt,
   }
 
-  class Error < StandardError; end
-  class PopenError < Error; end
+  class Error   < StandardError; end
+  class PopenError      < Error; end
+  class CannotConvert   < Error; end
   class ConversionError < Error; end
-  class CannotConvert < Error; end
 
   attr_accessor :path, :mime
 
@@ -97,6 +99,18 @@ class Any2Text
 
   def anti_odt(path)
     popen('odt2txt', path)
+  rescue PopenError => ex
+    raise ConversionError, ex
+  end
+
+  def anti_txt(path)
+    File.read(path)
+  rescue Errno::ENOENT => ex
+    raise ConversionError, ex
+  end
+
+  def anti_html(path)
+    popen("html2text", "-nobs", "-ascii", path)
   rescue PopenError => ex
     raise ConversionError, ex
   end
