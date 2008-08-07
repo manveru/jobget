@@ -1,13 +1,14 @@
 require 'open3'
+require 'nkf'
 
 class Any2Text
   MIME_ID = {
+    'text/html' => :html,
+    'text/plain' => :txt,
     'application/pdf' => :pdf,
     'application/msword' => :doc,
     'application/octet-stream' => :doc, # oh well...
     'application/vnd.oasis.opendocument.text' => :odt,
-    'text/html' => :html,
-    'text/plain' => :txt,
   }
 
   class Error   < StandardError; end
@@ -110,7 +111,13 @@ class Any2Text
   end
 
   def anti_html(path)
-    popen("html2text", "-nobs", "-ascii", path)
+    out = popen("html2text", "-nobs", "-ascii", path)
+
+    if NKF.guess(out) == NKF::BINARY
+      raise ConversionError, "Produced binary output"
+    else
+      return out
+    end
   rescue PopenError => ex
     raise ConversionError, ex
   end

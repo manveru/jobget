@@ -24,6 +24,7 @@ class ResumeController < Controller
 
   def read(id)
     @resume = Resume[id.to_i]
+    pp @resume
     # h Resume.all.inspect
   end
 

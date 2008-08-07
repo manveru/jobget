@@ -1,0 +1,13 @@
+# Max Mustermann
+## Curriculum Vitae
+
+### Personal Attributes and Skills
+
+  * Ability to integrate and work well in a team
+  * Laterally minded and creative
+  * Skilled at test driven development
+
+### Personal Interests
+
+  * Asian cuisine
+  * Ruby programming language

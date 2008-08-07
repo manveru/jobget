@@ -32,18 +32,27 @@ class Resume < Sequel::Model
   hooks.clear
   before_create{ self.created_at = Time.now }
   before_save{ self.updated_at = Time.now }
-  before_delete do
-    # DB['cvs_jobs'].find(:cv_id => id).delete
+
+  before_delete do # a cleanup of Job/Resume associations
+    ds = DB[:jobs_resumes]
+
+    jobs.each do |job|
+      ds.filter(:job_id => job.id, :resume_id => id)
+    end
+
+    ds.delete
   end
 
   def self.from_request(user, request)
     title, file = request[:title], request[:file]
     mime, temp = file[:type], file[:tempfile]
+    mime = mime.split.first
 
     resume = Resume.new(:title => title, :user_id => user.id, :mime => mime)
 
     a2t = Any2Text.new(temp.path)
     resume.text = a2t.try_convert
+    pp a2t
     txt, ext = a2t.save_both("resume/#{user.id}_#{resume.text.hash}")
     resume.txt = txt
     resume.original = ext

@@ -6,9 +6,6 @@ module Sequel
       from_key = "#{from.table_name.to_s.singularize}_id"
       to_key = "#{to.table_name.to_s.singularize}_id"
 
-      p from_key => to_key
-      p name
-
       db.create_table! name do
         primary_key :id
         foreign_key from_key, :class => from

@@ -70,6 +70,7 @@ Dir['res/Resume.*'].each do |resume|
       :tempfile => File.open(resume),
     }
   }
+  pp req
 
   begin
     resume = Resume.from_request(admin, req)
