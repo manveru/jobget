@@ -1,18 +1,29 @@
+# Stdlib
+require 'erb'
+require 'logger'
+
+# Gems
+require 'rubygems'
 require 'ramaze'
 require 'sequel'
 require 'faker'
 require 'maruku'
-require 'erb'
+require 'configuration'
 
-require 'env'
-
+# Hacks and custom libs
 require 'vendor/any2text'
 require 'vendor/form_field'
 require 'vendor/model_link'
 require 'vendor/create_join'
 require 'vendor/paginator'
 
+# Contrib
+require 'ramaze/contrib/email'
+
+# App
+require 'env'
 require 'controller/init'
 require 'model/init'
 
+# Let's go!
 Ramaze.start :adapter => :mongrel

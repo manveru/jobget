@@ -1,5 +1,3 @@
-require 'configuration'
-
 Configuration.for :jobget do
   title 'Macheads'
   domain 'macheads.co.uk'
@@ -29,9 +27,6 @@ Configuration.for :jobget do
     subject_prefix "[#{title}]"
   end
 end
-
-require 'ramaze'
-require 'ramaze/contrib/email'
 
 m = Configuration.for(:jobget).mail
 

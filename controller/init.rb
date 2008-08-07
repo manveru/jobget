@@ -38,7 +38,6 @@ class Controller < Ramaze::Controller
   end
 
   def nav(dataset, limit = 5)
-    require 'vendor/sequel_paginator'
     page = (request[:pager] || 1).to_i
     @pager = Paginator.new(dataset, page, limit)
   end

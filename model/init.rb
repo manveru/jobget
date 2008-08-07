@@ -1,9 +1,4 @@
-require 'logger'
 DB = Sequel.sqlite # :logger => Logger.new($stdout)
-
-require 'vendor/create_join'
-require 'vendor/form_field'
-require 'vendor/model_link'
 
 acquire 'model/*.rb'
 
