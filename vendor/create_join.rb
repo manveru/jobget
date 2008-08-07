@@ -1,9 +1,13 @@
 module Sequel
   class Model
-    def self.create_join(to, name = "#{table_name}_#{to.table_name}")
+    def self.create_join(to, name = nil)
       from = self
+      name ||= [table_name.to_s, to.table_name.to_s].sort.join('_')
       from_key = "#{from.table_name.to_s.singularize}_id"
       to_key = "#{to.table_name.to_s.singularize}_id"
+
+      p from_key => to_key
+      p name
 
       db.create_table! name do
         primary_key :id
