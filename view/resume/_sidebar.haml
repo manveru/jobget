@@ -1,0 +1,16 @@
+.section
+  %h4
+    %a{:href => R(ResumeController)} Your Resumes
+  - user.resumes.each do |resume|
+    = part(:resume, ResumeController, :resume => resume)
+.section.resume-upload
+  %form{:method => :POST, :action => R(ResumeController, :create), :enctype => 'multipart/form-data'}
+    %fieldset
+      %legend Upload Resume
+      .pair
+        %label{:for => :title} Title:
+        %input{:type => :text, :name => :title, :id => :title}
+      .pair
+        %label{:for => :file} File:
+        %input{:type => :file, :name => :file, :id => :file}
+      = part :buttons, MainController, :value => 'Upload Resume'

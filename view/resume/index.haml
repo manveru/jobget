@@ -1,0 +1,20 @@
+= part(:submenu, UserController)
+
+%h2 Your Resumes
+
+.resumes
+  - if @resumes.empty?
+    You don't have any Resumes yet, get started by uploading one in the form in the sidebar.
+  - @resumes.each do |resume|
+    .resume
+      %dl
+        %dt Title:
+        %dd
+          = resume.href(resume.title, :read)
+        %dt Preview:
+        %dd= resume.preview
+        %dt Last Updated:
+        %dd= resume.updated_formatted
+      %form{:method => :POST, :action => resume.to(:edit)}
+        = resume.form_field(:public)
+        = part :buttons, MainController, :value => 'Change'

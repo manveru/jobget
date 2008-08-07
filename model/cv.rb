@@ -1,8 +1,6 @@
-require 'vendor/any2text'
-
-class CV < Sequel::Model
+class Resume < Sequel::Model
   FORM_LABEL = {
-    :public => 'CV can be searched by other users',
+    :public => 'Resume can be searched by other users',
   }
 
   set_schema do
@@ -27,26 +25,29 @@ class CV < Sequel::Model
   end
 
   belongs_to :user
-  many_to_many :jobs, :class => :Job, :join_table => 'cvs_jobs'
+  many_to_many :jobs
 
   create_table unless table_exists?
 
   hooks.clear
   before_create{ self.created_at = Time.now }
   before_save{ self.updated_at = Time.now }
+  before_delete do
+    # DB['cvs_jobs'].find(:cv_id => id).delete
+  end
 
   def self.from_request(user, request)
     title, file = request[:title], request[:file]
     mime, temp = file[:type], file[:tempfile]
 
-    cv = CV.new(:title => title, :user_id => user.id, :mime => mime)
+    resume = Resume.new(:title => title, :user_id => user.id, :mime => mime)
 
     a2t = Any2Text.new(temp.path)
-    cv.text = a2t.try_convert
-    txt, ext = a2t.save_both("cv/#{user.id}_#{cv.text.hash}")
-    cv.txt = txt
-    cv.original = ext
-    cv
+    resume.text = a2t.try_convert
+    txt, ext = a2t.save_both("resume/#{user.id}_#{resume.text.hash}")
+    resume.txt = txt
+    resume.original = ext
+    resume
   end
 
   def self.searchable
@@ -56,14 +57,9 @@ class CV < Sequel::Model
   def self.search(*words)
     terms = words.map{|word| "%#{word}%" }
 
-    searchable.filter do |cv|
-      cv.text.like(*terms)
+    searchable.filter do |resume|
+      resume.text.like(*terms)
     end
-  end
-
-  # Why does this not work out of the box?
-  def add_job(job)
-    CV.db[:cvs_jobs].insert(:cv_id => id, :job_id => job.id)
   end
 
   # View
@@ -86,7 +82,7 @@ class CV < Sequel::Model
 
   def to_download
     ext = Any2Text::MIME_ID[mime]
-    R(CVController, :download, link_ref + ".#{ext}")
+    R(ResumeController, :download, link_ref + ".#{ext}")
   end
 
   include FormField::Model

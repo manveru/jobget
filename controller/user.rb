@@ -48,8 +48,8 @@ class UserController < Controller
   def profile
     must_login 'in order to access your profile'
 
-    @cvs = user.cvs
-    @jobs = @cvs.map{|cv| cv.jobs }.flatten.uniq
+    @resumes = user.resumes
+    @jobs = @resumes.map{|resume| resume.jobs }.flatten.uniq
   end
 
   def update

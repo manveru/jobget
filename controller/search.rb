@@ -18,9 +18,9 @@ class SearchController < Controller
     nav @results
   end
 
-  def cv
-    if cv = request[:cv]
-      @results = CV.search(cv).all
+  def resume
+    if resume = request[:resume]
+      @results = Resume.search(resume).all
     else
       @results = []
     end

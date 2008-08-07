@@ -7,14 +7,14 @@ require 'vendor/model_link'
 
 acquire 'model/*.rb'
 
-[Job, Company, User, CV].each do |model|
+[Job, Company, User, Resume].each do |model|
   model.create_table!
 end
 
 Job.create_join User
 Company.create_join Job
-CV.create_join User
-CV.create_join Job
+Resume.create_join User
+Resume.create_join Job
 
 check_save = lambda{|obj|
   obj.valid? ? obj.save : (pp obj.errors; exit(1))
@@ -67,21 +67,21 @@ Company.each do |company|
   company.save
 end
 
-Dir['res/CV.*'].each do |cv|
+Dir['res/Resume.*'].each do |resume|
   req = {
-    :title => cv,
+    :title => resume,
     :file => {
-      :type => `file -bi #{cv}`.strip,
-      :tempfile => File.open(cv),
+      :type => `file -bi #{resume}`.strip,
+      :tempfile => File.open(resume),
     }
   }
 
   begin
-    cv = CV.from_request(admin, req)
+    resume = Resume.from_request(admin, req)
   rescue Any2Text::CannotConvert => ex
     puts ex
     next
   end
 
-  check_save[cv]
+  check_save[resume]
 end

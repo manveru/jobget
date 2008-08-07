@@ -1,0 +1,5 @@
+.submenu
+  %a{:href => R(ResumeController)} Your Resumes
+  %a{:href => @resume.to(:download), :target => :_blank} Download original
+%h2= @resume.title
+%p.resume= nl2br h(@resume.text)

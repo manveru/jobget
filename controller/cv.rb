@@ -1,60 +1,70 @@
-class CVController < Controller
-  map '/cv'
-
+class ResumeController < Controller
   def index
-    must_login 'to view your CVs'
+    must_login 'to view your Resumes'
 
-    @cvs = user.cvs
+    @resumes = user.resumes
   end
 
   def create
-    must_login 'to create a new CV'
-    must_post 'to create a new CV'
+    must_login 'to create a new Resume'
+    must_post 'to create a new Resume'
 
-    cv = CV.from_request(user, request)
-    save(cv)
+    resume = Resume.from_request(user, request)
+    save(resume)
   end
 
-  def edit(cv_id)
+  def edit(resume_id)
     redirect_referrer unless logged_in? and request.post?
-    cv = CV[cv_id.to_i]
-    cv.public = request[:public]
-    pp cv.public
-    save(cv)
+    resume = Resume[resume_id.to_i]
+    resume.public = request[:public]
+    pp resume.public
+    save(resume)
   end
 
 
   def read(id)
-    @cv = CV[id.to_i]
-    # h CV.all.inspect
+    @resume = Resume[id.to_i]
+    # h Resume.all.inspect
   end
 
   def download(id)
-    if cv = CV[id.to_i]
-      if user == cv.user or cv.companies === user.company
-        # response['Content-Disposition'] = cv.link_ref + ".#{ext}"
-        response['Content-Type'] = cv.mime
-        respond File.open(cv.original)
-        # if user.company == cv.company or user == cv.user
-        #   pp cv
+    if resume = Resume[id.to_i]
+      if user == resume.user or resume.companies === user.company
+        # response['Content-Disposition'] = resume.link_ref + ".#{ext}"
+        response['Content-Type'] = resume.mime
+        respond File.open(resume.original)
+        # if user.company == resume.company or user == resume.user
+        #   pp resume
         # end
       end
     end
   end
 
+  def delete(id)
+    if resume = Resume[id.to_i]
+      if user == resume.user
+        resume.delete
+      else
+        flash[:bad] = "Requested Action not allowed"
+      end
+    else
+      flash[:bad] = "Requested Resume wasn't found"
+    end
+  end
+
   private
 
-  def save(cv)
-    if cv.valid?
-      if cv.user_id == user.id
-        cv.save
+  def save(resume)
+    if resume.valid?
+      if resume.user_id == user.id
+        resume.save
       else
         flash[:bad] = 'Permission denied'
       end
 
       redirect_referrer
     else
-      flash[:bad] = cv.errors.inspect
+      flash[:bad] = resume.errors.inspect
     end
   end
 end

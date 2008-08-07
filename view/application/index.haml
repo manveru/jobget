@@ -4,20 +4,20 @@
 %ul
   - if @got.empty?
     You haven't received any applications yet.
-  - @got.each do |cv, job|
+  - @got.each do |resume, job|
     %li
-      = h cv.user.public_name
+      = h resume.user.public_name
       applied with
-      = cv.href(cv.title, :read)
+      = resume.href(resume.title, :read)
       for
       = job.href(job.title, :read)
 %h3 Sent
 %ul
   - if @sent.empty?
     You haven't applied to any jobs yet.
-  - @sent.each do |job, cv|
+  - @sent.each do |job, resume|
     %li
       You applied with
-      = cv.href(cv.title, :read)
+      = resume.href(resume.title, :read)
       for
       = job.href(job.title, :read)

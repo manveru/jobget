@@ -14,20 +14,20 @@ class JobController < Controller
     must_login 'before applying for this job'
 
     @job = job_for job_id
-    cvs_for user
+    resumes_for user
   end
 
-  def submit_cv(job_id)
-    must_login 'before submitting a CV'
+  def submit_resume(job_id)
+    must_login 'before submitting a Resume'
 
     job = job_for(job_id)
 
-    if cv = CV[:id => request[:cv], :user_id => user.id]
-      if cv.jobs.include?(job)
-        flash[:bad] = 'You already submitted a CV for this job'
+    if resume = Resume[:id => request[:resume], :user_id => user.id]
+      if resume.jobs.include?(job)
+        flash[:bad] = 'You already submitted a Resume for this job'
       else
-        flash[:good] = 'Submitted CV'
-        cv.add_job(job)
+        flash[:good] = 'Submitted Resume'
+        resume.add_job(job)
       end
     end
 
@@ -136,11 +136,11 @@ class JobController < Controller
     redirect_referrer
   end
 
-  def cvs_for(user)
-    @cvs = user.cvs
+  def resume_for(user)
+    @resumes = user.resumes
 
-    if @cvs.empty?
-      flash[:bad] = 'Please create a CV before you apply'
+    if @resumes.empty?
+      flash[:bad] = 'Please create a Resume before you apply'
       call R(UserController, :profile)
     end
   end

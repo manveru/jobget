@@ -33,7 +33,7 @@ class User < Sequel::Model
     foreign_key :company_id
   end
 
-  one_to_many :cvs, :class => :CV, :join_table => 'cvs_users'
+  one_to_many :resumes
   belongs_to :company
 
   create_table unless table_exists?
@@ -152,35 +152,35 @@ class User < Sequel::Model
   # TODO: produce performant SQL
 
   def applied_to?(given_job)
-    cvs.any? do |cv|
-      cv.jobs.any? do |job|
+    resumes.any? do |resume|
+      resume.jobs.any? do |job|
         given_job.id == job.id
       end
     end
   end
 
-  def cvs_sent
-    job_cv = {}
+  def resumes_sent
+    job_resume = {}
 
-    cvs.each do |cv|
-      cv.jobs.each do |job|
-        job_cv[job] = cv
+    resumes.each do |resume|
+      resume.jobs.each do |job|
+        job_resume[job] = resume
       end
     end
 
-    job_cv
+    job_resume
   end
 
-  def cvs_got
-    cv_job = {}
+  def resumes_got
+    resume_job = {}
 
     company.jobs.each do |job|
-      job.cvs.each do |cv|
-        cv_job[cv] = job
+      job.resumes.each do |resume|
+        resume_job[resume] = job
       end
     end
 
-    cv_job
+    resume_job
   end
 
   include FormField::Model

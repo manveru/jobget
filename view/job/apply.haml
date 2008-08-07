@@ -1,11 +1,11 @@
-%form{:action => Rs(:submit_cv, @job.id), :method => :POST}
+%form{:action => Rs(:submit_resume, @job.id), :method => :POST}
   %fielset
     %legend
       %h2
         = "Apply for #{@job.title}"
     .pair
-      %label{:for => :cv} Select the CV to use:
-      %select{:name => :cv, :id => :cv}
-        - user.cvs.each do |cv|
-          %option{:value => cv.id}= cv.title
+      %label{:for => :resume} Select the Resume to use:
+      %select{:name => :resume, :id => :resume}
+        - user.resumes.each do |resume|
+          %option{:value => resume.id}= resume.title
     %input{:type => :submit, :class => :submit, :value => 'Submit Application'}

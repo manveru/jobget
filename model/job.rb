@@ -52,7 +52,7 @@ class Job < Sequel::Model
     foreign_key :company_id
   end
 
-  many_to_many :cvs, :class => :CV, :join_table => 'cvs_jobs'
+  many_to_many :resumes
   # User.has_many :cvs, :class=>:CV, :key=>:user_id
   belongs_to :company
 

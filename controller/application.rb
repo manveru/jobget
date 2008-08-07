@@ -2,7 +2,7 @@ class ApplicationController < Controller
   def index
     must_login 'to view applications'
 
-    @sent = user.cvs_sent
-    @got = user.cvs_got
+    @sent = user.resumes_sent
+    @got = user.resumes_got
   end
 end

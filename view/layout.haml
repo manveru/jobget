@@ -21,7 +21,7 @@
           %a{:href => R(JobController, :browse)} Browse jobs
           - if logged_in?
             %a{:href => R(UserController, :profile)} Profile
-            %a{:href => R(CVController)} CVs
+            %a{:href => R(ResumeController)} Resumes
             %a{:href => R(ApplicationController)} Applications
             %a{:href => R(CompanyController, :edit)} Company
             %a{:href => R(JobController, :manage)} Jobs    
@@ -39,11 +39,11 @@
               %input{:type => :hidden, :name => :only, :value => request[:only] || :any}
               %input{:type => :text, :id => :search, :name => :q, :value => request[:q]}
         .section
-          %form{:action => R(SearchController, :cv)}
+          %form{:action => R(SearchController, :resume)}
             %fieldset
-              %label{:for => :search_cv}
-                %h4 Search for a CV
-              %input{:type => :text, :id => :search_cv, :name => :cv, :value => request[:cv]}
+              %label{:for => :search_resume}
+                %h4 Search for a Resume
+              %input{:type => :text, :id => :search_resume, :name => :resume, :value => request[:resume]}
         = part(:sidebar)
 
     .bottom
