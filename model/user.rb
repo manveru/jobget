@@ -108,7 +108,7 @@ class User < Sequel::Model
                             :forgot_link => link,
                             :name => public_name
 
-    Ramaze::EmailHelper.send "manveru@localhost", # email,
+    Ramaze::EmailHelper.send email,
       "Password reset for #{email}",
       mail_text
   end
