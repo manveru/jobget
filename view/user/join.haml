@@ -1,7 +1,12 @@
 .join
+  .submenu
+    %a{:href => Rs(:join, :role => 'applicant')} Create applicant account
+    %a{:href => Rs(:join, :role => 'recruiter')} Create recruiter account
+
   %form{:method => :POST}
     %fieldset
-      %legend Create Account
+      %legend= "Create #{@role} account"
+      %input{:type => :hidden, :name => :role, :value => @role}
       = @user.form_field(:email)
       = @user.form_field(:password, :password)
       = @user.form_field(:password_confirmation, :password)

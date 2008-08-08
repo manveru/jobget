@@ -15,6 +15,7 @@ class UserController < Controller
 
   def join
     pp request.params
+    @role = request[:role] || 'applicant'
 
     @user = User.new
     @user.set_values(request.subset(*User::FORM))

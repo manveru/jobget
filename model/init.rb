@@ -19,7 +19,8 @@ conf_admin = Configuration.for(:jobget).admin
 admin = User.new_encrypted(:email    => conf_admin.email,
                            :name     => conf_admin.name,
                            :password => conf_admin.password,
-                           :location => conf_admin.location)
+                           :location => conf_admin.location,
+                            :role => 'admin')
 check_save[admin]
 
 (6 - User.count).times do
@@ -28,7 +29,8 @@ check_save[admin]
 
   user = User.new_encrypted(:name => name,
                             :email => email,
-                            :password => 'letmein')
+                            :password => 'letmein',
+ d                          :role => 'recruiter')
   check_save[user]
 end
 

@@ -26,7 +26,10 @@ class FormField
   end
 
   def to_s
-    label = @this.class::FORM_LABEL[field]
+    unless label = @this.class::FORM_LABEL[field]
+      raise("No FORM_LABEL for %p on %p" % [field, @this.class])
+    end
+
     label += ':'
     id = @id
     _self = self

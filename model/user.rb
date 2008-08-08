@@ -1,13 +1,16 @@
 class User < Sequel::Model
   # self.raise_on_save_failure = false
 
-  FORM = [:name, :email, :location, :newsletter]
+  FORM = [:name, :email, :location, :newsletter, :role, :phone]
   FORM_LABEL = {
     :email => 'E-mail',
     :password => 'Password',
     :password_confirmation => 'Password confirmation',
     :tos => %(I have read and accept the <a href="/tos">Terms of Service</a>),
-    :newsletter => 'I want to receive updates by email'
+    :newsletter => 'I want to receive updates by email',
+    :location => 'Location',
+    :name => 'Name',
+    :phone => 'Phone number',
   }
 
   set_schema do
@@ -15,15 +18,18 @@ class User < Sequel::Model
 
     varchar :name
     varchar :email
-    varchar :crypt # hashed password
+    varchar :crypt, :size => 40 # hashed password
+
+    varchar :role, :size => 9 # "applicant" | "recruiter" | "admin"
 
     # If a user has sent the forgot form this will contain a hashed value that
     # is sent to the email address.
     # The link contained in the email will log the user in by using this hash
     # so he can change the password.
-    varchar :reset_hash
+    varchar :reset_hash, :size => 40
 
     varchar :location
+    varchar :phone
 
     boolean :newsletter
 
@@ -144,9 +150,8 @@ class User < Sequel::Model
   # Modify Profile
 
   def profile_update(request)
-    name, location = request[:name, :location]
-    self.name = name
-    self.location = location
+    self.name, self.location, self.phone =
+      request[:name, :location, :phone]
   end
 
   # TODO: produce performant SQL
@@ -189,5 +194,17 @@ class User < Sequel::Model
 
   def public_name
     name || email[/^(.*)@/, 1]
+  end
+
+  def recruiter?
+    %w[recruiter admin].include? role
+  end
+
+  def applicant?
+    %w[applicant admin].include? role
+  end
+
+  def admin?
+    role == 'admin'
   end
 end

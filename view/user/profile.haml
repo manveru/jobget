@@ -5,12 +5,9 @@
 %form{:method => :POST, :action => R(UserController, :update)}
   %fieldset
     %legend Update Profile
-    .pair
-      %label{:for => :name} Name:
-      %input{:type => :text, :name => :name, :value => user.name, :id => :name}
-    .pair
-      %label{:for => :location} Location:
-      %input{:type => :text, :name => :location, :value => user.location, :id => :location}
+    = user.form_field(:name)
+    = user.form_field(:location)
+    = user.form_field(:phone)
     = part :buttons, MainController, :value => 'Update profile'
 
 %form{:method => :POST, :action => R(UserController, :update_password)}
