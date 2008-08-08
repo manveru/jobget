@@ -36,7 +36,7 @@ class JobController < Controller
   end
 
   def post
-    acl 'before posting a job', :applicant
+    acl 'before posting a job', :recruiter
 
     @job = Job.from_request(request)
     @job.company = company = user.company
