@@ -1,12 +1,12 @@
 class ResumeController < Controller
   def index
-    must_login 'to view your Resumes'
+    acl 'to view your Resumes', :applicant
 
     @resumes = user.resumes
   end
 
   def create
-    must_login 'to create a new Resume'
+    acl 'to create a new Resume', :applicant
     must_post 'to create a new Resume'
 
     resume = Resume.from_request(user, request)
@@ -14,7 +14,9 @@ class ResumeController < Controller
   end
 
   def edit(resume_id)
-    redirect_referrer unless logged_in? and request.post?
+    acl "to edit this Resume", :applicant
+    must_post "to edit a Resume"
+
     resume = Resume[resume_id.to_i]
     resume.public = request[:public]
     pp resume.public
@@ -23,12 +25,16 @@ class ResumeController < Controller
 
 
   def read(id)
+    acl "to view a Resume", :applicant
+
     @resume = Resume[id.to_i]
     pp @resume
     # h Resume.all.inspect
   end
 
   def download(id)
+    must_login "to download this Resume", :applicant, :recruiter
+
     if resume = Resume[id.to_i]
       if user == resume.user or resume.companies === user.company
         # response['Content-Disposition'] = resume.link_ref + ".#{ext}"
@@ -42,6 +48,8 @@ class ResumeController < Controller
   end
 
   def delete(id)
+    acl "to delete this Resume", :applicant
+
     if resume = Resume[id.to_i]
       if user == resume.user
         resume.delete

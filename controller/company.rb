@@ -1,6 +1,6 @@
 class CompanyController < Controller
   def edit
-    call R(UserController, :login) unless logged_in?
+    acl "in order to change company details", :recruiter
     @company = user.company
 
     if request.post?

@@ -1,12 +1,8 @@
 class Controller < Ramaze::Controller
   map nil
-
-  def self.inherited(klass)
-    super
-    klass.helper :xhtml, :user, :stack, :formatting
-    klass.engine :Haml
-    klass.layout '/layout'
-  end
+  helper :xhtml, :user, :stack, :formatting
+  engine :Haml
+  layout '/layout'
 
   private
 
@@ -35,6 +31,20 @@ class Controller < Ramaze::Controller
     return if request.post?
     flash[:bad] = "Request should be POST #{message}"
     target ? redirect(target) : redirect_referrer
+  end
+
+  def acl(message, *list)
+    list.map!{|l| l.to_s }
+    list << 'admin'
+
+    must_login(message)
+
+    if list.include?(user.role)
+      return true
+    else
+      flash[:bad] = "Access denied"
+      answer request.referrer
+    end
   end
 
   def nav(dataset, limit = 5)

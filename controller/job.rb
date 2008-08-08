@@ -12,14 +12,14 @@ class JobController < Controller
   end
 
   def apply(job_id)
-    must_login 'before applying for this job'
+    acl 'before applying for this job', :applicant
 
     @job = job_for job_id
     resumes_for user
   end
 
   def submit_resume(job_id)
-    must_login 'before submitting a Resume'
+    acl 'before submitting a Resume', :applicant
 
     job = job_for(job_id)
 
@@ -36,7 +36,7 @@ class JobController < Controller
   end
 
   def post
-    must_login 'before posting a job'
+    acl 'before posting a job', :applicant
 
     @job = Job.from_request(request)
     @job.company = company = user.company
@@ -58,7 +58,7 @@ class JobController < Controller
   end
 
   def state(job_id)
-    must_login 'before changing state of job'
+    acl 'before changing state of job', :recruiter
 
     if job = Job[:company_id => user.company.id, :id => job_id.to_i]
       if publicity = request[:public]
@@ -83,14 +83,14 @@ class JobController < Controller
   end
 
   def manage
-    must_login 'before managing your jobs'
+    acl 'before managing your jobs', :recruiter
 
     @company = user.company
     @jobs = @company.jobs.reverse
   end
 
   def edit(job_id)
-    must_login 'before editing this job'
+    acl 'before editing this job', :recruiter
 
     @job = job_for(job_id)
 
@@ -110,7 +110,7 @@ class JobController < Controller
   template :edit, :post
 
   def delete(job_id)
-    must_login 'before deleting this job'
+    acl 'before deleting this job', :recruiter
 
     if job = Job[:company_id => user.company.id, :id => job_id.to_i]
       job.delete

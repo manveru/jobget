@@ -21,11 +21,15 @@ class SearchController < Controller
   end
 
   def resume
+    acl "to search for resumes", :recruiter
+
     if resume = request[:resume]
       @results = Resume.search(resume).all
     else
       @results = []
     end
+
+    nav @results
   end
 
   private
