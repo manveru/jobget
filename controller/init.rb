@@ -47,9 +47,14 @@ class Controller < Ramaze::Controller
     end
   end
 
-  def nav(dataset, limit = 5)
+  def paginate(dataset, limit = 5)
     page = (request[:pager] || 1).to_i
     @pager = Paginator.new(dataset, page, limit)
+  end
+
+  def pager_navigation
+    return nil unless @pager
+    @pager.navigation if @pager.needed?
   end
 end
 

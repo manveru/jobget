@@ -8,7 +8,7 @@ class JobController < Controller
 
   def browse
     @jobs = Job.available
-    nav @jobs
+    paginate @jobs
   end
 
   def apply(job_id)

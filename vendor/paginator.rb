@@ -12,6 +12,10 @@ class Paginator
       @array.size
     end
 
+    def empty?
+      @array.empty?
+    end
+
     def page_count
       pages, rest = @array.size.divmod(@limit)
       rest == 0 ? pages : pages + 1
