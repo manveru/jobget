@@ -14,6 +14,8 @@ class SearchController < Controller
       end
     end
 
+    Stat.log_search(:terms => @q, :category => @only)
+
     @results.uniq!
     nav @results
   end

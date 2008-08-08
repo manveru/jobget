@@ -1,0 +1,9 @@
+%h3= "View of %p @ %p" % [view.job.title, view.job.company.name]
+%dl
+  %dt Time:
+  %dd= stat.created_at.utc
+  %dt IP:
+  %dd= stat.ip
+  %dt Referrer:
+  %dd
+    %a{:href => stat.referrer}= stat.referrer

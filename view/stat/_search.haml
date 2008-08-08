@@ -1,0 +1,9 @@
+%h3= "Search for %p in %p" % [search.terms, search.category]
+%dl
+  %dt Time:
+  %dd= stat.created_at.utc
+  %dt IP:
+  %dd= stat.ip
+  %dt Referrer:
+  %dd
+    %a{:href => stat.referrer}= stat.referrer

@@ -3,6 +3,7 @@ class JobController < Controller
 
   def read(job_id)
     @job = job_for(job_id)
+    Stat.log_view(:job_id => @job.id)
   end
 
   def browse
