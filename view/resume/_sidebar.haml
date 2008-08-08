@@ -14,3 +14,11 @@
         %label{:for => :file} File:
         %input{:type => :file, :name => :file, :id => :file}
       = part :buttons, MainController, :value => 'Upload Resume'
+      %p
+        Accepted formats are:
+        %ul
+          %li Microsoft Word document
+          %li OpenOffice.org Writer
+          %li PDF (Portable Document Format)
+          %li Plain text
+          %li HTML
