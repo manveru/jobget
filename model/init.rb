@@ -30,7 +30,7 @@ check_save[admin]
   user = User.new_encrypted(:name => name,
                             :email => email,
                             :password => 'letmein',
- d                          :role => 'recruiter')
+                            :role => 'recruiter')
   check_save[user]
 end
 
