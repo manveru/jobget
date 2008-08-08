@@ -1,0 +1,26 @@
+.user.read
+  %h2= h @user.public_name
+
+  %h3 Contact Details:
+  %dl
+    %dt E-mail:
+    %dd
+      %a{:href => "mailto:#{@user.email}"}= @user.email
+
+    %dt Phone:
+    %dd= h @user.phone
+
+    %dt Location:
+    %dd= h @user.location
+
+    - if user.admin?
+      %dt Role:
+      %dd= @user.role.capitalize
+      %dt Joined:
+      %dd= @user.created_at.utc
+      %dt Receives newsletters:
+      %dd= @user.newsletter ? 'Yes' : 'No'
+
+  - if about = @user.about and not about.strip.empty?
+    %h3 About me:
+    .markdown= Maruku.new(h @user.about).to_html

@@ -1,0 +1,11 @@
+%h2= "#{conf.title} Users"
+
+- if @users.empty?
+  %p No users found, in theory you shouldn't see this.
+- else
+  = pager_navigation
+  %ul
+  - @pager.each do |user|
+    %li
+      %a{:href => user.to(:read)}= h "#{user.public_name}'s profile"
+  = pager_navigation

@@ -22,11 +22,19 @@
           - if logged_in?
             %a{:href => R(UserController, :profile)} Profile
             - if user.admin?
-              %a{:href => R(ApplicationController)} Applications
-              %a{:href => R(CompanyController, :edit)} Company
-              %a{:href => R(JobController, :manage)} Jobs    
-              %a{:href => R(ResumeController)} Resumes
-              %a{:href => R(StatController)} Statistics
+              .admin
+                %span.section
+                  %b Applicant
+                  %a{:href => R(ResumeController)} Resumes
+                %span.section
+                  %b Recruiter
+                  %a{:href => R(ApplicationController)} Applications
+                  %a{:href => R(CompanyController, :edit)} Company
+                  %a{:href => R(JobController, :manage)} Jobs    
+                %span.section
+                  %b Admin
+                  %a{:href => R(StatController)} Statistics
+                  %a{:href => R(UserController, :list)} Users
             - elsif user.recruiter?
               %a{:href => R(ApplicationController)} Applications
               %a{:href => R(CompanyController, :edit)} Company

@@ -207,4 +207,12 @@ class User < Sequel::Model
   def admin?
     role == 'admin'
   end
+
+  # Links
+
+  include ModelLink
+
+  def link_ref
+    [id, *public_name.scan(/\w+/)].join('-').downcase
+  end
 end

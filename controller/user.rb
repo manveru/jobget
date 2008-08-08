@@ -53,6 +53,21 @@ class UserController < Controller
     @jobs = @resumes.map{|resume| resume.jobs }.flatten.uniq
   end
 
+  def read(user_id)
+    must_login 'in order to access this profile'
+    @user = User[user_id.to_i]
+
+    unless @user.visible_to?(user)
+      flash[:bad] = 'You are not allowed to view this profile'
+      redirect_referrer
+    end
+  end
+
+  def list
+    acl 'to see this page', :admin
+    paginate(@users = User, 50)
+  end
+
   def update
     must_login 'before updating your profile'
 
