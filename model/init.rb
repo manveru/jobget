@@ -20,16 +20,26 @@ admin = User.new_encrypted(:email    => conf_admin.email,
                            :name     => conf_admin.name,
                            :password => conf_admin.password,
                            :location => conf_admin.location,
-                            :role => 'admin')
+                           :about    => conf_admin.about,
+                           :phone    => conf_admin.phone,
+                           :role => 'admin')
 check_save[admin]
 
+# Create 6 random users
 (6 - User.count).times do
   name = Faker::Name.name
   email = Faker::Internet.email(name)
+  about = Faker::Lorem.paragraphs(3).join("\n")
+  phone = Faker::PhoneNumber.phone_number
+  location = [:uk_country, :uk_postcode, :uk_county, :street_address]
+  location = location.map{|sym| Faker::Address.send(sym) }.join(', ')
 
   user = User.new_encrypted(:name => name,
                             :email => email,
                             :password => 'letmein',
+                            :phone => phone,
+                            :about => about,
+                            :location => location,
                             :role => 'recruiter')
   check_save[user]
 end

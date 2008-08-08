@@ -12,6 +12,7 @@ form
   textarea
     :width 40em
     :height 20em
+    :border 1px solid black
   fieldset
     :border 1px solid #ddd
     .pair
@@ -43,14 +44,35 @@ a.button
   :clear both
 
 .top
-  h1
+  .title
     :float left
-    :color #000
-    :text-align center
-    :margin 0
-    :margin-bottom 1em
+    :width 5em
+    h1
+      :color #000
+      :margin 0
   .menu
     :float right
+    :margin-bottom 0.3em
+    .auth
+      :float right
+    .nav
+      :text-align right
+      :clear both
+      .admin
+        :height 3em
+        :top 10px
+        :position relative
+        .section
+          :float left
+          :height 3em
+          :margin-bottom 1em
+          :text-align center
+          :border 1px solid #ddd
+          :padding 0.2em
+          b
+            :display block
+            :margin-bottom 0.2em
+          
 
 .bottom
   :width 100%
@@ -185,3 +207,32 @@ form
     :background #afa
   span.grey
     :padding 0.2em
+
+.markdown
+  :border 1px solid #ddd
+  // This politely makes content smaller without forcing a length restriction
+  // as applicants drive to show the best things to recruiters without making
+  // them scroll.
+  :height 12em
+  :overflow auto
+  :padding 1em
+
+  h1, h2, h3, h4, h5, h6
+    :margin 0 !important
+
+  h1
+    :font-size 1.5em
+  h2
+    :font-size 1.4em
+  h3
+    :font-size 1.3em
+  h4
+    :font-size 1.2em
+  h5
+    :font-size 1.1em
+  h6
+    :font-size 1.0em
+
+  ul
+    li
+      :list-style disc

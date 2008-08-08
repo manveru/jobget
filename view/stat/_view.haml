@@ -1,4 +1,11 @@
-%h3= "View of %p @ %p" % [view.job.title, view.job.company.name]
+- job = view.job
+
+%h3
+  View of
+  %a{:href => job.to(:read)}= h job.title
+  @
+  %a{:href => job.company.to(:search)}= h job.company.name
+
 %dl
   %dt Time:
   %dd= stat.created_at.utc

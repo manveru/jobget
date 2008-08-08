@@ -7,6 +7,8 @@ Configuration.for :jobget do
     name "Michael Fellinger"
     password 'letmein'
     location 'Tokyo, Japan'
+    about 'The admin. Got root'
+    phone '77'
   end
 
   mail do

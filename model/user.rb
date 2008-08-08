@@ -1,7 +1,7 @@
 class User < Sequel::Model
   # self.raise_on_save_failure = false
 
-  FORM = [:name, :email, :location, :newsletter, :role, :phone]
+  FORM = [:name, :email, :location, :newsletter, :role, :phone, :about]
   FORM_LABEL = {
     :email => 'E-mail',
     :password => 'Password',
@@ -11,6 +11,7 @@ class User < Sequel::Model
     :location => 'Location',
     :name => 'Name',
     :phone => 'Phone number',
+    :about => 'About me',
   }
 
   set_schema do
@@ -30,6 +31,7 @@ class User < Sequel::Model
 
     varchar :location
     varchar :phone
+    varchar :about
 
     boolean :newsletter
 
@@ -150,16 +152,26 @@ class User < Sequel::Model
   # Modify Profile
 
   def profile_update(request)
-    self.name, self.location, self.phone =
-      request[:name, :location, :phone]
+    self.name, self.location, self.phone, self.about =
+      request[:name, :location, :phone, :about]
   end
 
   # TODO: produce performant SQL
-
   def applied_to?(given_job)
     resumes.any? do |resume|
       resume.jobs.any? do |job|
         given_job.id == job.id
+      end
+    end
+  end
+
+  # TODO: produce performant SQL
+  def visible_to?(user)
+    return true if user.admin? or user.id == id
+
+    resumes.any? do |resume|
+      resume.jobs.any? do |job|
+        job.company.user.id == user.id
       end
     end
   end

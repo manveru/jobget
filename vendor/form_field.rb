@@ -83,6 +83,8 @@ class FormField
       password(gestalt)
     when :boolean, :checkbox
       checkbox(gestalt)
+    when :textarea
+      textarea(gestalt)
     when Array, Range
       select(gestalt)
     else

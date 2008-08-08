@@ -6,12 +6,14 @@
     = css('screen')
   %body
     .top
-      %a{:href => '/'}
-        %h1= conf.title
+      .title
+        %a{:href => '/'}
+          %h1= conf.title
       .menu
         .auth
           - if logged_in?
             Logged in as
+            = user.role.capitalize
             %a{:href => R(UserController, :profile)}= user.public_name
             %a{:href => R(UserController, :logout)} Logout
           - else

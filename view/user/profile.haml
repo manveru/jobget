@@ -2,12 +2,16 @@
 
 %h2= "Profile of #{h(user.name || user.email)}"
 
+.submenu
+  %a{:href => user.to(:read)} View public profile
+
 %form{:method => :POST, :action => R(UserController, :update)}
   %fieldset
     %legend Update Profile
     = user.form_field(:name)
     = user.form_field(:location)
     = user.form_field(:phone)
+    ~ user.form_field(:about, :textarea)
     = part :buttons, MainController, :value => 'Update profile'
 
 %form{:method => :POST, :action => R(UserController, :update_password)}

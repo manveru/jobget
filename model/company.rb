@@ -1,8 +1,8 @@
 class Company < Sequel::Model
   FORM_LABEL = {
-    :name => 'Company name',
-    :founded => 'Year founded',
-    :text => 'Company description',
+    :name      => 'Company name',
+    :founded   => 'Year founded',
+    :text      => 'Company description',
     :employees => 'No. of Employees',
   }
 
