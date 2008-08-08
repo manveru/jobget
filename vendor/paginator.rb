@@ -42,7 +42,8 @@ class Paginator
       to = ((@page + @limit) - 1).abs
       p :page => @page, :from => from
       p :limit => @limit, :to => to
-      @array[from...to].each(&block)
+      a = @array[from...to] || []
+      a.each(&block)
     end
 
     include Enumerable
@@ -109,6 +110,10 @@ class Paginator
 
   def g
     Ramaze::Gestalt.new
+  end
+
+  def needed?
+    @pager.page_count > 1
   end
 
   def method_missing(meth, *args, &block)
