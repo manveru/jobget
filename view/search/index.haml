@@ -1,6 +1,6 @@
 .search
   %h2= "#{@results.size} Results for '#{h(@q)}' from #{Job.available.count} Jobs"
-  = @pager.navigation
+  = @pager.navigation if @pager.needed?
   - @pager.each do |job|
     = part :job, MainController, :job => job
-  = @pager.navigation
+  = @pager.navigation if @pager.needed?
