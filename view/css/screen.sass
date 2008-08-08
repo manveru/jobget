@@ -43,6 +43,9 @@ a.button
 .top, .middle, .bottom
   :clear both
 
+.clear
+  :clear both
+
 .top
   .title
     :float left
@@ -72,7 +75,6 @@ a.button
           b
             :display block
             :margin-bottom 0.2em
-          
 
 .bottom
   :width 100%
@@ -207,6 +209,20 @@ form
     :background #afa
   span.grey
     :padding 0.2em
+
+.company
+  .logo
+    :float right
+    img
+      :border 0
+    #image-box
+      :position relative
+      img#original-logo
+      img#grey-overlay
+        :position absolute
+        :left 0
+    a
+      :text-decoration none
 
 .markdown
   :border 1px solid #ddd

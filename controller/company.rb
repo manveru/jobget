@@ -13,4 +13,13 @@ class CompanyController < Controller
       @company.save
     end
   end
+
+  def toggle_logo
+    acl 'change your logo', :recruiter
+
+    company = user.company
+    company.logo_show = !company.logo_show
+    company.save
+    redirect Rs(:edit)
+  end
 end

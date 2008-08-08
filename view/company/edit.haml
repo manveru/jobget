@@ -1,16 +1,31 @@
 = part(:submenu, UserController)
 
-%h2= "Edit #{h(@company.name || 'your company')}"
+.company
+  .logo
+    #image-box
+      - if @company.logo_show
+        %a{:href => Rs(:toggle_logo)}
+          %img{:src => @company.to(:logo)}
+      - else
+        %a{:href => Rs(:toggle_logo)}
+          %img#original-logo{:src => @company.to(:logo)}
+          %img#grey-overlay{:src => '/grey.png'}
+          %script{:type => 'text/javascript'}
+            var logo = document.getElementById('original-logo');
+            var overlay = document.getElementById('grey-overlay');
+            overlay.width = logo.width;
+            overlay.height = logo.height;
+  %h2= "Edit #{h(@company.name || 'your company')}"
+  .clear
 
-%form{:method => :POST, :enctype => 'multipart/form-data'}
-  %fieldset
-    %legend Edit Company
-    = @company.form_field(:name)
-    = @company.form_field(:founded, (1800..Date.today.year))
-    = @company.form_field(:employees, %w[1-10 11-50 51-100 101-500 501-1000 1000+])
-    .pair
-      %label{:for => :logo} Company Logo:
-      %input{:type => :file, :name => :logo, :id => :logo}
-    %img{:src => @company.to(:logo)}
-    = @company.form_field(:text)
-    = part :buttons, MainController, :value => 'Update Company'
+  %form{:method => :POST, :enctype => 'multipart/form-data'}
+    %fieldset
+      %legend Edit Company
+      = @company.form_field(:name)
+      = @company.form_field(:founded, (1800..Date.today.year))
+      = @company.form_field(:employees, %w[1-10 11-50 51-100 101-500 501-1000 1000+])
+      .pair
+        %label{:for => :logo} Company Logo:
+        %input{:type => :file, :name => :logo, :id => :logo}
+      = @company.form_field(:text)
+      = part :buttons, MainController, :value => 'Update Company'

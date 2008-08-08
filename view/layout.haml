@@ -32,7 +32,7 @@
                   %b Recruiter
                   %a{:href => R(ApplicationController)} Applications
                   %a{:href => R(CompanyController, :edit)} Company
-                  %a{:href => R(JobController, :manage)} Jobs    
+                  %a{:href => R(JobController, :manage)} Jobs
                 %span.section
                   %b Admin
                   %a{:href => R(StatController)} Statistics
@@ -40,7 +40,7 @@
             - elsif user.recruiter?
               %a{:href => R(ApplicationController)} Applications
               %a{:href => R(CompanyController, :edit)} Company
-              %a{:href => R(JobController, :manage)} Jobs    
+              %a{:href => R(JobController, :manage)} Jobs
             - elsif user.applicant?
               %a{:href => R(ResumeController)} Resumes
 

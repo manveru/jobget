@@ -40,6 +40,9 @@ class Company < Sequel::Model
 
   def logo=(file)
     temp = file[:tempfile]
+    pp file
+    p temp.size
+    return if temp.size == 0
 
     ext = logo_ext || File.extname(file[:filename])
     logo_file = Ramaze::Global.public_root/"logo/#{self.id}#{ext}"
