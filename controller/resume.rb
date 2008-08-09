@@ -11,6 +11,10 @@ class ResumeController < Controller
 
     resume = Resume.from_request(user, request)
     save(resume)
+  rescue Any2Text::CannotConvert => ex
+    Ramaze::Log.error(ex)
+    flash[:bad] = "The submitted resume cannot be processed."
+    redirect_referrer
   end
 
   def edit(resume_id)
@@ -23,13 +27,13 @@ class ResumeController < Controller
     save(resume)
   end
 
-
   def read(id)
     acl "to view a Resume", :applicant
 
-    @resume = Resume[id.to_i]
-    pp @resume
-    # h Resume.all.inspect
+    return if @resume = Resume[id.to_i]
+
+    flash[:bad] = "Requested Resume wasn't found"
+    redirect_referrer
   end
 
   def download(id)
@@ -52,13 +56,15 @@ class ResumeController < Controller
 
     if resume = Resume[id.to_i]
       if user == resume.user
-        resume.delete
+        resume.destroy # runs hooks
       else
         flash[:bad] = "Requested Action not allowed"
       end
     else
       flash[:bad] = "Requested Resume wasn't found"
     end
+
+    redirect Rs(:/)
   end
 
   private

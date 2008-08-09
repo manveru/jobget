@@ -35,17 +35,27 @@ class Any2Text
     end
   end
 
-  def try_convert
+  def try_convert(mime = mime)
+    if MIME_ID[mime]
+      if converted = convert_as(mime)
+        return converted
+      end
+    end
+
     MIME_ID.each do |mime, id|
-      begin
-        self.mime = mime
-        return convert
-      rescue ConversionError
-        self.mime = nil
+      if converted = convert_as(mime)
+        return converted
       end
     end
 
     raise CannotConvert
+  end
+
+  def convert_as(mime)
+    self.mime = mime
+    convert
+  rescue ConversionError
+    self.mime = nil
   end
 
   # Convert before modifying the file to write to, this gives us the chance to
@@ -66,6 +76,7 @@ class Any2Text
   end
 
   def popen(*args)
+    p :popen => args
     text = nil
 
     Open3.popen3(*args) do |stdin, stdout, stderr|
@@ -105,20 +116,26 @@ class Any2Text
   end
 
   def anti_txt(path)
-    File.read(path)
+    out = File.read(path)
+    check_for_binary(out)
+
   rescue Errno::ENOENT => ex
     raise ConversionError, ex
   end
 
   def anti_html(path)
     out = popen("html2text", "-nobs", "-ascii", path)
+    check_for_binary(out)
 
-    if NKF.guess(out) == NKF::BINARY
-      raise ConversionError, "Produced binary output"
-    else
-      return out
-    end
   rescue PopenError => ex
     raise ConversionError, ex
+  end
+
+  def check_for_binary(string)
+    if NKF.guess(string) == NKF::BINARY
+      raise ConversionError, "Produced binary output"
+    else
+      return string
+    end
   end
 end

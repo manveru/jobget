@@ -33,7 +33,7 @@ class Resume < Sequel::Model
   before_create{ self.created_at = Time.now }
   before_save{ self.updated_at = Time.now }
 
-  before_delete do # a cleanup of Job/Resume associations
+  before_destroy do # a cleanup of Job/Resume associations and delete files
     ds = DB[:jobs_resumes]
 
     jobs.each do |job|
@@ -41,6 +41,8 @@ class Resume < Sequel::Model
     end
 
     ds.delete
+    FileUtils.rm_f(txt)
+    FileUtils.rm_f(original)
   end
 
   def self.from_request(user, request)
@@ -51,9 +53,14 @@ class Resume < Sequel::Model
     resume = Resume.new(:title => title, :user_id => user.id, :mime => mime)
 
     a2t = Any2Text.new(temp.path)
-    resume.text = a2t.try_convert
+    resume.text = a2t.try_convert(mime)
+    resume.save
+
+    name = title.to_s.gsub(/\W+/u, '-').gsub(/-*$/, '')
+    file = [user.id, resume.id, name].join('_')
     pp a2t
-    txt, ext = a2t.save_both("resume/#{user.id}_#{resume.text.hash}")
+
+    txt, ext = a2t.save_both("resume/#{file}")
     resume.txt = txt
     resume.original = ext
     resume
