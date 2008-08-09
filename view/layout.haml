@@ -8,7 +8,7 @@
     .top
       .title
         %a{:href => '/'}
-          %h1= conf.title
+          %img{:src => '/logo.png', :alt => conf.title}
       .menu
         .auth
           - if logged_in?
