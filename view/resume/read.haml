@@ -3,5 +3,7 @@
   %a{:href => @resume.to(:download), :target => :_blank} Download original
   %a{:href => @resume.to(:delete)} Delete
   %a{:href => @resume.to(:toggle_public)}= @resume.public ? 'Make private' : 'Make public'
+
 %h2= @resume.title
+
 %p.resume= nl2br h(@resume.text)

@@ -1,15 +1,16 @@
 .join
   .submenu
-    %a{:href => Rs(:join, :role => 'applicant')} Create applicant account
-    %a{:href => Rs(:join, :role => 'recruiter')} Create recruiter account
+    %a.applicant{:href => Rs(:join, :role => 'applicant')} Create applicant account
+    %a.recruiter{:href => Rs(:join, :role => 'recruiter')} Create recruiter account
 
-  %form{:method => :POST}
-    %fieldset
-      %legend= "Create #{@role} account"
-      %input{:type => :hidden, :name => :role, :value => @role}
-      = @user.form_field(:email)
-      = @user.form_field(:password, :password)
-      = @user.form_field(:password_confirmation, :password)
-      = @user.form_field(:tos, :boolean)
-      = @user.form_field(:newsletter)
-      = part :buttons, MainController, :value => 'Create Account'
+  %div{:class => @role}
+    %form{:method => :POST}
+      %fieldset
+        %legend= "Create #{@role} account"
+        %input{:type => :hidden, :name => :role, :value => @role}
+        = @user.form_field(:email)
+        = @user.form_field(:password, :password)
+        = @user.form_field(:password_confirmation, :password)
+        = @user.form_field(:tos, :boolean)
+        = @user.form_field(:newsletter)
+        = part :buttons, MainController, :value => 'Create Account'

@@ -7,9 +7,10 @@
       No related jobs found
     - related.each do |rel|
       = rel.href(rel.title, :read)
-.section
-  %h4 Post Job
-  %p
-    = "Post a new Job on #{conf.title}."
-    Targeted, results-based, risk-free hiring.
-  %a{:href => R(JobController, :post), :class => :button} Post job
+- if user.recruiter? or not logged_in?
+  .section
+    %h4 Post Job
+    %p
+      = "Post a new Job on #{conf.title}."
+      Targeted, results-based, risk-free hiring.
+    %a{:href => R(JobController, :post), :class => :button} Post job

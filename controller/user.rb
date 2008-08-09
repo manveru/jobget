@@ -1,15 +1,30 @@
 class UserController < Controller
   def login
     @email, @password = request[:email, :password]
-    return unless request.post?
 
-    pp session
+    case request[:fail]
+    when 'session'
+      flash[:bad] =
+        'Failed to login, please make sure you have cookies enabled for this site'
+    end
+
+    return unless request.post?
 
     if user_login :email => @email, :crypt => User.encrypt(@password)
       flash[:good] = 'Welcome back'
-      answer Rs(:profile)
+      redirect Rs(:after_login)
+      answer Rs(:read)
     else
       flash[:bad] = 'Failed to login, please check your input'
+    end
+  end
+
+  # Make sure we really did login, a browser without cookies would fail.
+  def after_login
+    if logged_in?
+      answer Rs(:read)
+    else
+      redirect Rs(:login, :fail => :session)
     end
   end
 
@@ -30,7 +45,7 @@ class UserController < Controller
         if request[:tos]
           @user.save
           user_login(:email => @user.email, :crypt => @user.crypt)
-          answer Rs(:profile)
+          answer Rs(:read)
         else
           @user.errors.add(:tos, 'Terms of Service are not confirmed')
           # redirect_referrer
@@ -46,16 +61,22 @@ class UserController < Controller
     answer R(:/)
   end
 
-  def profile
+  def edit(user_id = nil)
     must_login 'in order to access your profile'
+
+    if user.admin? and user_id
+      @user = User[user_id.to_i]
+    else
+      @user = user
+    end
 
     @resumes = user.resumes
     @jobs = @resumes.map{|resume| resume.jobs }.flatten.uniq
   end
 
-  def read(user_id)
+  def read(user_id = nil)
     must_login 'in order to access this profile'
-    @user = User[user_id.to_i]
+    @user = user_id ? User[user_id.to_i] : user
 
     unless @user.visible_to?(user)
       flash[:bad] = 'You are not allowed to view this profile'
@@ -97,13 +118,13 @@ class UserController < Controller
       user_login(:email => user.email, :crypt => user.crypt)
       flash[:good] = 'Password changed'
 
-      redirect Rs(:profile)
+      redirect Rs(:read)
     else
       pp user.errors
     end
   end
 
-  template :update_password, :profile
+  template :update_password, :edit
 
   def forgot_login
     email, hash = request[:email, :hash]
@@ -120,7 +141,7 @@ class UserController < Controller
       flash[:bad] = "Unable to login this way"
     end
 
-    redirect Rs(:profile)
+    redirect Rs(:read)
   end
 
   def forgot

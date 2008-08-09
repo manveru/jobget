@@ -1,5 +1,9 @@
+- if @user.id == user.id or user.admin?
+  .submenu
+    %a{:href => @user.to(:edit)} Edit Profile
+
 .user.read
-  %h2= h @user.public_name
+  %h2= "Profile of #{h @user.public_name}"
 
   %h3 Contact Details:
   %dl

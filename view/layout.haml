@@ -14,7 +14,7 @@
           - if logged_in?
             Logged in as
             = user.role.capitalize
-            %a{:href => R(UserController, :profile)}= user.public_name
+            %a{:href => R(UserController, :read)}= user.public_name
             %a{:href => R(UserController, :logout)} Logout
           - else
             %a{:href => R(UserController, :join)} Join
@@ -22,7 +22,7 @@
         .nav
           %a{:href => R(JobController, :browse)} Browse jobs
           - if logged_in?
-            %a{:href => R(UserController, :profile)} Profile
+            %a{:href => R(UserController, :read)} Profile
             - if user.admin?
               .admin
                 %span.section

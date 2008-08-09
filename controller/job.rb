@@ -142,7 +142,7 @@ class JobController < Controller
 
     if @resumes.empty?
       flash[:bad] = 'Please create a Resume before you apply'
-      call R(UserController, :profile)
+      call R(UserController, :read)
     end
   end
 
