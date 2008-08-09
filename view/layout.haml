@@ -28,6 +28,7 @@
                 %span.section
                   %b Applicant
                   %a{:href => R(ResumeController)} Resumes
+                  %a{:href => R(ApplicationController)} Applications
                 %span.section
                   %b Recruiter
                   %a{:href => R(ApplicationController)} Applications
@@ -43,6 +44,7 @@
               %a{:href => R(JobController, :manage)} Jobs
             - elsif user.applicant?
               %a{:href => R(ResumeController)} Resumes
+              %a{:href => R(ApplicationController)} Applications
 
     .middle
       .content

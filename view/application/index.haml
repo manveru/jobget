@@ -1,23 +1,26 @@
-%h2 Applications
-
-%h3 Received
-%ul
+- if user.recruiter?
+  %h2 Applications received
   - if @got.empty?
     You haven't received any applications yet.
-  - @got.each do |resume, job|
-    %li
-      = h resume.user.public_name
-      applied with
-      = resume.href(resume.title, :read)
-      for
-      = job.href(job.title, :read)
-%h3 Sent
-%ul
+  - else
+    %ul
+    - @got.each do |resume, job|
+      %li
+        = resume.user.href(resume.user.public_name, :read)
+        applied with
+        = resume.href(resume.title, :read)
+        for
+        = job.href(job.title, :read)
+
+- if user.applicant?
+  %h2 Applications sent
   - if @sent.empty?
     You haven't applied to any jobs yet.
-  - @sent.each do |job, resume|
-    %li
-      You applied with
-      = resume.href(resume.title, :read)
-      for
-      = job.href(job.title, :read)
+  - else
+    %ul
+    - @sent.each do |job, resume|
+      %li
+        You applied with
+        = resume.href(resume.title, :read)
+        for
+        = job.href(job.title, :read)
