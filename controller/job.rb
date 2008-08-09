@@ -137,7 +137,7 @@ class JobController < Controller
     redirect_referrer
   end
 
-  def resume_for(user)
+  def resumes_for(user)
     @resumes = user.resumes
 
     if @resumes.empty?
