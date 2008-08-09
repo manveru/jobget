@@ -37,7 +37,7 @@ class ResumeController < Controller
   end
 
   def download(id)
-    must_login "to download this Resume", :applicant, :recruiter
+    acl "to download this Resume", :applicant, :recruiter
 
     if resume = Resume[id.to_i]
       if user == resume.user or resume.companies === user.company
