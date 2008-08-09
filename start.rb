@@ -25,5 +25,12 @@ require 'env'
 require 'controller/init'
 require 'model/init'
 
+handle_error = Ramaze::Dispatcher::Error::HANDLE_ERROR
+handle_error.clear
+handle_error.merge!(
+  Object                  => [500, '/error/internal_server_error'],
+  Ramaze::Error::NoAction => [404, '/error/not_found']
+)
+
 # Let's go!
 Ramaze.start :adapter => :mongrel
