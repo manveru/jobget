@@ -17,14 +17,17 @@ class ResumeController < Controller
     redirect_referrer
   end
 
-  def edit(resume_id)
-    acl "to edit this Resume", :applicant
-    must_post "to edit a Resume"
+  def toggle_public(resume_id)
+    acl "to change visibility of this Resume", :applicant
 
-    resume = Resume[resume_id.to_i]
-    resume.public = request[:public]
-    pp resume.public
-    save(resume)
+    if resume = Resume[resume_id.to_i]
+      resume.public = !resume.public
+      save(resume)
+    else
+      flash[:bad] = "Requested Resume wasn't found"
+    end
+
+    redirect_referrer
   end
 
   def read(id)

@@ -15,6 +15,3 @@
         %dd= resume.preview
         %dt Last Updated:
         %dd= resume.updated_formatted
-      %form{:method => :POST, :action => resume.to(:edit)}
-        = resume.form_field(:public)
-        = part :buttons, MainController, :value => 'Change'
