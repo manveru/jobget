@@ -2,6 +2,11 @@ Configuration.for :jobget do
   title 'Macheads'
   domain 'macheads.co.uk'
 
+  # :live => DB specified by db below, no init
+  # :dev  => DB sqlite in memory, init executed
+  mode :dev
+  db 'sqlite://db/jobget.sqlite' # DB to use
+
   admin do
     email 'm.fellinger@gmail.com'
     name "Michael Fellinger"
