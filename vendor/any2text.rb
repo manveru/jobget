@@ -17,8 +17,7 @@ class Any2Text
     :odt  => lambda{|path| popen('odt2txt', path) },
     :txt  => lambda{|path| File.read(path) },
     :html => lambda{|path| popen("html2text", "-nobs", "-ascii", path) },
-  end
-
+  }
 
   class Error   < StandardError; end
   class PopenError      < Error; end
@@ -37,7 +36,7 @@ class Any2Text
 
   def convert(mime = mime)
     if id = MIME_ID[mime]
-      conv(path, &CONV[id])
+      conv(path, &ID_CONVERT[id])
     else
       raise(ConversionError, "Cannot convert from (%p => %p)" % [mime, path])
     end
@@ -107,7 +106,7 @@ class Any2Text
     [to_txt, to_ext]
   end
 
-  def popen(*args)
+  def self.popen(*args)
     p :popen => args
     text = nil
 
