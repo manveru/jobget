@@ -11,6 +11,15 @@ class Any2Text
     'application/vnd.oasis.opendocument.text' => :odt,
   }
 
+  ID_CONVERT = {
+    :doc  => lambda{|path| popen('antiword', path) },
+    :pdf  => lambda{|path| popen('pdftotext', path, '-') },
+    :odt  => lambda{|path| popen('odt2txt', path) },
+    :txt  => lambda{|path| File.read(path) },
+    :html => lambda{|path| popen("html2text", "-nobs", "-ascii", path) },
+  end
+
+
   class Error   < StandardError; end
   class PopenError      < Error; end
   class CannotConvert   < Error; end
@@ -23,15 +32,38 @@ class Any2Text
   end
 
   def mime_for(path)
-    popen('file', '-bi', path).strip
+    popen('file', '-bi', path).strip.split.first
   end
 
   def convert(mime = mime)
     if id = MIME_ID[mime]
-      method_name = "anti_#{id}"
-      send(method_name, path)
+      conv(path, &CONV[id])
     else
       raise(ConversionError, "Cannot convert from (%p => %p)" % [mime, path])
+    end
+  end
+
+  def conv(path)
+    string = yield(path)
+    fail_on_binary(string)
+    fail_on_empty(string)
+  rescue PopenError => ex
+    raise ConversionError, ex
+  end
+
+  def fail_on_binary(string)
+    if NKF.guess(string) == NKF::BINARY
+      raise ConversionError, "Produced binary output"
+    else
+      return string
+    end
+  end
+
+  def fail_on_empty(string)
+    if string.strip.empty?
+      raise ConversionError, "Produced empty output"
+    else
+      return string
     end
   end
 
@@ -95,47 +127,5 @@ class Any2Text
     end
 
     text
-  end
-
-  def anti_doc(path)
-    popen('antiword', path)
-  rescue PopenError => ex
-    raise ConversionError, ex
-  end
-
-  def anti_pdf(path)
-    popen('pdftotext', path, '-')
-  rescue PopenError => ex
-    raise ConversionError, ex
-  end
-
-  def anti_odt(path)
-    popen('odt2txt', path)
-  rescue PopenError => ex
-    raise ConversionError, ex
-  end
-
-  def anti_txt(path)
-    out = File.read(path)
-    check_for_binary(out)
-
-  rescue Errno::ENOENT => ex
-    raise ConversionError, ex
-  end
-
-  def anti_html(path)
-    out = popen("html2text", "-nobs", "-ascii", path)
-    check_for_binary(out)
-
-  rescue PopenError => ex
-    raise ConversionError, ex
-  end
-
-  def check_for_binary(string)
-    if NKF.guess(string) == NKF::BINARY
-      raise ConversionError, "Produced binary output"
-    else
-      return string
-    end
   end
 end
