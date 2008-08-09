@@ -25,7 +25,7 @@
 
       = part :skills, JobController, :skills => @job.skill_list
 
-    = Maruku.new(@job.text).to_html
+    = Maruku.new(h @job.text).to_html
 
   .apply
     - if user.applied_to?(@job)
