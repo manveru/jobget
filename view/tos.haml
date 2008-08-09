@@ -1,0 +1,16 @@
+- para = lambda{|n| Faker::Lorem::paragraphs(n) }
+- link = lambda{|id, name| "<a href='##{id}' id='#{id}'><h3>#{name}</h3></a>" }
+
+%h2 Terms of Service
+
+= link[:general, 'General']
+- para[5].each do |pa|
+  %p= pa
+
+= link[:specific, 'Specific']
+- para[5].each do |pa|
+  %p= pa
+
+= link[:privacy, 'Privacy Policy']
+- para[5].each do |pa|
+  %p= pa
