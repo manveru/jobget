@@ -13,7 +13,7 @@ Configuration.for :jobget do
     password 'letmein'
     location 'Tokyo, Japan'
     about 'The admin. Got root'
-    phone '77'
+    phone '777 777 777' # don't call or the world will implode
   end
 
   mail do
@@ -40,3 +40,10 @@ m = Configuration.for(:jobget).mail
 Ramaze::EmailHelper.trait.each do |key, value|
   Ramaze::EmailHelper.trait key => m.send(key)
 end
+
+handle_error = Ramaze::Dispatcher::Error::HANDLE_ERROR
+handle_error.clear
+handle_error.merge!(
+  Object                  => [500, '/error/internal_server_error'],
+  Ramaze::Error::NoAction => [404, '/error/not_found']
+)

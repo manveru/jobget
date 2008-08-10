@@ -2,35 +2,26 @@
 require 'erb'
 require 'logger'
 
-# Gems
+# Bootstrap
 require 'rubygems'
 require 'ramaze'
-require 'sequel'
-require 'faker'
-require 'maruku'
-require 'configuration'
-
-# Hacks and custom libs
-require 'vendor/any2text'
-require 'vendor/form_field'
-require 'vendor/model_link'
-require 'vendor/create_join'
-require 'vendor/paginator'
 
 # Contrib
 require 'ramaze/contrib/email'
+require 'ramaze/setup'
 
-# App
-require 'env'
-require 'controller/init'
-require 'model/init'
+Ramaze.setup do
+  gems 'sequel', 'faker', 'maruku', 'image_science', 'configuration'
 
-handle_error = Ramaze::Dispatcher::Error::HANDLE_ERROR
-handle_error.clear
-handle_error.merge!(
-  Object                  => [500, '/error/internal_server_error'],
-  Ramaze::Error::NoAction => [404, '/error/not_found']
-)
+  # My hacks and libs done for this app and all generations of human mankind
+  acquire 'vendor/*.rb'
 
-# Let's go!
-Ramaze.start :adapter => :mongrel
+  # App
+  require 'env'
+  require 'controller/init'
+  require 'model/init'
+
+  # Conf
+  global.adapter = :mongrel
+  global.sourcereload = 1
+end
