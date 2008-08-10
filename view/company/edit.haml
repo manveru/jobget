@@ -31,5 +31,7 @@
       .pair
         %label{:for => :logo} Company Logo:
         %input{:type => :file, :name => :logo, :id => :logo}
+        %br/
+        May be png, jpeg, gif
       = @company.form_field(:text)
       = part :buttons, MainController, :value => 'Update Company'

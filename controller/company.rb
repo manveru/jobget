@@ -4,20 +4,19 @@ class CompanyController < Controller
     @company = user.company
 
     if request.post?
-      @company.set_values request.subset(*Company::FORM_LABEL.keys)
-
-      if file = request[:logo]
-        begin
-          @company.update_logo file
-        rescue TypeError => ex
-          Ramaze::Log.error(ex)
-          flash[:bad] = "The submitted image cannot be processed."
-          redirect_referrer
-        end
-      end
-
-      @company.save
+      result = @company.profile_update(request)
+      flash.merge!(result)
+      redirect_referrer
     end
+  end
+
+  def update
+    must_login 'before updating your profile'
+    must_post 'in order to update your profile'
+
+    result = user.profile_update(request)
+    flash.merge! result
+    redirect_referrer
   end
 
   def toggle_logo

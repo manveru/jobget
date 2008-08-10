@@ -1,3 +1,6 @@
+- if @user.avatar
+  %img.avatar{:src => @user.avatar.file(:medium)}
+
 - if @user.id == user.id or user.admin?
   .submenu
     %a{:href => @user.to(:edit)} Edit Profile

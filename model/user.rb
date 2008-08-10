@@ -39,9 +39,11 @@ class User < Sequel::Model
     time :updated_at
 
     foreign_key :company_id
+    foreign_key :avatar_id
   end
 
   one_to_many :resumes
+  belongs_to :avatar # has_one
   belongs_to :company
 
   create_table unless table_exists?
@@ -154,6 +156,26 @@ class User < Sequel::Model
   def profile_update(request)
     self.name, self.location, self.phone, self.about =
       request[:name, :location, :phone, :about]
+
+    if file = request[:avatar]
+      update_avatar(file)
+    end
+
+    if valid?
+      save
+      return :good => "Profile updated"
+    else
+      return :bad => errors.inspect
+    end
+  rescue TypeError => ex
+    Ramaze::Log.error(ex)
+    return :bad => "The submitted image cannot be processed."
+  end
+
+  def update_avatar(file)
+    if avatar = Avatar.store(file, public_name, :user_id => id)
+      self.avatar = avatar
+    end
   end
 
   # TODO: produce performant SQL

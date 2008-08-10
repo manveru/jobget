@@ -1,7 +1,7 @@
-class Logo < Sequel::Model
+class Avatar < Sequel::Model
   IMAGE = {
     # specifies belongs_to, will create relation and foreign key
-    :owner     => :Company,
+    :owner     => :User,
 
     # Algorithm to use in ImageScience
     #
@@ -25,9 +25,8 @@ class Logo < Sequel::Model
     # Key specifies the filename and accessors, value are arguments to the
     # algorithm
     :sizes => {
-      :small  => 150, # [150, 150],
-      :medium => 300, # [300, 300],
-      :large  => 600, # [600, 600],
+      :small  => 150, #[150, 150],
+      :medium => 200, #[200, 200]
     }
   }
 

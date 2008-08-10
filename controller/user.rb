@@ -69,9 +69,6 @@ class UserController < Controller
     else
       @user = user
     end
-
-    @resumes = user.resumes
-    @jobs = @resumes.map{|resume| resume.jobs }.flatten.uniq
   end
 
   def read(user_id = nil)
@@ -91,16 +88,11 @@ class UserController < Controller
 
   def update
     must_login 'before updating your profile'
+    must_post 'in order to update your profile'
 
-    user.profile_update(request)
-
-    if user.valid?
-      user.save
-      flash[:good] = "Profile updated"
-      redirect_referrer
-    else
-      flash[:bad] = user.errors.inspect
-    end
+    result = user.profile_update(request)
+    flash.merge! result
+    redirect_referrer
   end
 
   def update_password

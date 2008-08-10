@@ -85,7 +85,7 @@ end
 conf = Configuration.for(:jobget)
 init = InitDatabase
 
-init.create_tables Job, Company, User, Resume, Logo
+init.create_tables Job, Company, User, Resume, Logo, Avatar
 init.create_joins(Job => User,
                   Company => Job,
                   Resume => User,

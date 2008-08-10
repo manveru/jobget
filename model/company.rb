@@ -42,9 +42,26 @@ class Company < Sequel::Model
     filter :name.like(*terms)
   end
 
+  def profile_update(request)
+    set_values(request.subset(*FORM_LABEL.keys))
+
+    if file = request[:logo]
+      update_logo(file)
+    end
+
+    if valid?
+      save
+      return :good => "Company updated"
+    else
+      return :bad => errors.inspect
+    end
+  rescue TypeError => ex
+    Ramaze::Log.error(ex)
+    return :bad => "The submitted image cannot be processed."
+  end
+
   def update_logo(file)
     if logo = Logo.store(file, id, :company_id => id)
-
       self.show_logo = true
       self.logo = logo
     end
