@@ -7,8 +7,8 @@
       = part :crud_menu, JobController, :job => @job
   .job
     %h2= @job.title
-    - if company.logo_show
-      %img.company{:src => company.to(:logo)}
+    - if company.show_logo
+      %img.company{:src => company.logo.medium_url}
 
     %dl
       %dt Contract Type:

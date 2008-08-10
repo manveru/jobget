@@ -3,12 +3,12 @@
 .company
   .logo
     #image-box
-      - if @company.logo_show
+      - if @company.show_logo
         %a{:href => Rs(:toggle_logo)}
-          %img{:src => @company.to(:logo)}
-      - else
+          %img{:src => @company.logo.small_url}
+      - elsif @company.logo
         %a{:href => Rs(:toggle_logo)}
-          %img#original-logo{:src => @company.to(:logo)}
+          %img#original-logo{:src => @company.logo.small_url}
           %img#grey-overlay{:src => '/grey.png'}
           %script{:type => 'text/javascript'}
             var logo = document.getElementById('original-logo');

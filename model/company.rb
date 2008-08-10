@@ -1,4 +1,7 @@
 class Company < Sequel::Model
+  include ModelLink
+  include FormField::Model
+
   FORM_LABEL = {
     :name      => 'Company name',
     :founded   => 'Year founded',
@@ -14,13 +17,14 @@ class Company < Sequel::Model
     varchar :employees
     string :text
 
-    boolean :logo_show, :default => false
-    varchar :logo_mime
+    boolean :show_logo, :default => false
 
     foreign_key :user_id
+    foreign_key :logo_id
   end
 
   belongs_to :user
+  belongs_to :logo # has_one :logo
   many_to_many :jobs
 
   create_table unless table_exists?
@@ -38,39 +42,17 @@ class Company < Sequel::Model
     filter :name.like(*terms)
   end
 
-  def logo=(file)
-    temp = file[:tempfile]
-    pp file
-    p temp.size
-    return if temp.size == 0
+  def update_logo(file)
+    if logo = Logo.store(file, id, :company_id => id)
 
-    ext = logo_ext || File.extname(file[:filename])
-    logo_file = Ramaze::Global.public_root/"logo/#{self.id}#{ext}"
-
-    FileUtils.mkdir_p File.dirname(logo_file)
-    FileUtils.cp temp.path, logo_file
-
-    self.logo_show = true
-    self.logo_mime = Ramaze::Tool::MIME.type_for(logo_file)
+      self.show_logo = true
+      self.logo = logo
+    end
   end
 
   # Links
 
-  include ModelLink
-
-  def to_logo
-    "/logo/#{self.id}#{logo_ext}"
-  end
-
   def to_search
     R(SearchController, :q => name, :only => :company)
-  end
-
-  include FormField::Model
-
-  private
-
-  def logo_ext
-    Ramaze::Tool::MIME.ext_for(logo_mime)
   end
 end

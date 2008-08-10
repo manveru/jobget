@@ -7,7 +7,13 @@ class CompanyController < Controller
       @company.set_values request.subset(*Company::FORM_LABEL.keys)
 
       if file = request[:logo]
-        @company.logo = file
+        begin
+          @company.update_logo file
+        rescue TypeError => ex
+          Ramaze::Log.error(ex)
+          flash[:bad] = "The submitted image cannot be processed."
+          redirect_referrer
+        end
       end
 
       @company.save
@@ -18,7 +24,7 @@ class CompanyController < Controller
     acl 'change your logo', :recruiter
 
     company = user.company
-    company.logo_show = !company.logo_show
+    company.show_logo = !company.show_logo
     company.save
     redirect Rs(:edit)
   end
