@@ -6,6 +6,8 @@
       - if @company.show_logo
         %a{:href => Rs(:toggle_logo)}
           %img{:src => @company.logo.small_url}
+          .status
+            Logo shown
       - elsif @company.logo
         %a{:href => Rs(:toggle_logo)}
           %img#original-logo{:src => @company.logo.small_url}
@@ -15,8 +17,10 @@
             var overlay = document.getElementById('grey-overlay');
             overlay.width = logo.width;
             overlay.height = logo.height;
+          .status
+            Logo hidden
+
   %h2= "Edit #{h(@company.name || 'your company')}"
-  .clear
 
   %form{:method => :POST, :enctype => 'multipart/form-data'}
     %fieldset
