@@ -28,7 +28,9 @@
     = Maruku.new(h @job.text).to_html
 
   .apply
-    - if user.applied_to?(@job)
+    - if user.recruiter?
+      Recruiters cannot apply for jobs
+    - elsif user.applied_to?(@job)
       You already applied for this Job
     - elsif @job.open
       %a{:href => @job.to(:apply)} Apply for this Job

@@ -24,23 +24,16 @@ class Resume < Sequel::Model
     foreign_key :user_id
   end
 
-  belongs_to :user
-  many_to_many :jobs
-
-  create_table unless table_exists?
-
   hooks.clear
   before_create{ self.created_at = Time.now }
+  after_create{ User[user_id].add_resume(self) }
   before_save{ self.updated_at = Time.now }
 
   before_destroy do # a cleanup of Job/Resume associations and delete files
-    ds = DB[:jobs_resumes]
-
-    jobs.each do |job|
-      ds.filter(:job_id => job.id, :resume_id => id)
+    applications.each do |app|
+      app.destroy
     end
 
-    ds.delete
     FileUtils.rm_f(txt)
     FileUtils.rm_f(original)
   end

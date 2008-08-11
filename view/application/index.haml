@@ -1,12 +1,13 @@
 - if user.recruiter?
   %h2 Applications received
-  - if @got.empty?
+  - if @applications.count == 0
     You haven't received any applications yet.
   - else
     %ul
-    - @got.each do |resume, job|
+    - @applications.each do |app|
+      - user, resume, job, company = app.user, app.resume, app.job, app.company
       %li
-        = resume.user.href(resume.user.public_name, :read)
+        = user.href(user.public_name, :read)
         applied with
         = resume.href(resume.title, :read)
         for
@@ -14,12 +15,15 @@
 
 - if user.applicant?
   %h2 Applications sent
-  - if @sent.empty?
+  - if @applications.count == 0
     You haven't applied to any jobs yet.
   - else
     %ul
-    - @sent.each do |job, resume|
+    - @applications.each do |app|
+      - user, resume, job, company = app.user, app.resume, app.job, app.company
       %li
+        On
+        = app.created_at.utc
         You applied with
         = resume.href(resume.title, :read)
         for

@@ -31,7 +31,7 @@ class Any2Text
   end
 
   def mime_for(path)
-    popen('file', '-bi', path).strip.split.first
+    self.class.popen('file', '-bi', path).strip.split.first
   end
 
   def convert(mime = mime)

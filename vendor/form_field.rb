@@ -67,8 +67,11 @@ class FormField
   end
 
   def input(gestalt)
-    tag = :input
     gestalt.input(@args.merge :type => :text, :value => value)
+  end
+
+  def file(gestalt)
+    gestalt.input(@args.merge :type => :file)
   end
 
   def textarea(gestalt)
@@ -85,6 +88,8 @@ class FormField
       checkbox(gestalt)
     when :textarea
       textarea(gestalt)
+    when :file
+      file(gestalt)
     when Array, Range
       select(gestalt)
     else

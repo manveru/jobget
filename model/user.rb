@@ -1,18 +1,25 @@
 class User < Sequel::Model
   # self.raise_on_save_failure = false
 
-  FORM = [:name, :email, :location, :newsletter, :role, :phone, :about]
   FORM_LABEL = {
-    :email => 'E-mail',
-    :password => 'Password',
-    :password_confirmation => 'Password confirmation',
-    :tos => %(I have read and accept the <a href="/tos">Terms of Service</a>),
+    :tos        => %(I have read and accept the <a href="/tos">Terms of Service</a>),
+    :role       => 'User Role',
+    :name       => 'Name',
+    :phone      => 'Phone number',
+    :about      => 'About me',
+    :email      => 'E-mail',
+    :location   => 'Location',
     :newsletter => 'I want to receive updates by email',
-    :location => 'Location',
-    :name => 'Name',
-    :phone => 'Phone number',
-    :about => 'About me',
+    :avatar     => 'Avatar (png, jpeg, gif)',
+
+    :password   => 'Password',
+    :password_confirmation => 'Password confirmation',
   }
+
+  FORM_UPDATE =
+    FORM_LABEL.keys - [
+      :email, :role, :tos, :password, :password_confirmation, :avatar]
+  FORM_JOIN = (FORM_LABEL.keys - FORM_UPDATE) + [:newsletter]
 
   set_schema do
     primary_key :id
@@ -42,12 +49,6 @@ class User < Sequel::Model
     foreign_key :avatar_id
   end
 
-  one_to_many :resumes
-  belongs_to :avatar # has_one
-  belongs_to :company
-
-  create_table unless table_exists?
-
   validations.clear
   validates do
     length_of :password, :minimum => 6, :allow_nil => true,
@@ -63,6 +64,13 @@ class User < Sequel::Model
     length_of :email, :minimum => email_size,
       :message => "Minimum #{email_size} characters"
     format_of :email, :with => /^.+@..+\...+/
+
+    format_of :role, :with => /\A(admin|recruiter|applicant)\Z/
+
+    length_of :name, :minimum => 2, :allow_nil => true,
+      :message => 'Minimum 2 characters'
+    length_of :name, :maximum => 50, :allow_nil => true,
+      :message => 'Maximum 50 characters'
   end
 
   hooks.clear
@@ -153,73 +161,74 @@ class User < Sequel::Model
 
   # Modify Profile
 
-  def profile_update(request)
-    self.name, self.location, self.phone, self.about =
-      request[:name, :location, :phone, :about]
+  def self.prepare(request)
+    user = new(request.subset(*FORM_JOIN))
+    user.errors.add(:role, 'Role not allowed') if user.role == 'admin'
+    user
+  end
 
-    if file = request[:avatar]
-      update_avatar(file)
-    end
+  def joins
+    self.crypt = self.class.encrypt(password)
+
+    return nil unless valid? # fail
+
+    save and return self if self.tos
+
+    errors.add(:tos, 'Terms of Service not confirmed')
+    return nil # fail
+  end
+
+  def password_update(request)
+    self.password, self.password_confirmation =
+      request[:password, :password_confirmation]
+    self.crypt = self.class.encrypt(self.password)
+
+    return self if valid?
+  end
+
+  def profile_update(request)
+    set_values request.subset(*FORM_UPDATE)
+
+    file = request[:avatar]
+    update_avatar(file) if file
 
     if valid?
       save
       return :good => "Profile updated"
-    else
-      return :bad => errors.inspect
     end
   rescue TypeError => ex
     Ramaze::Log.error(ex)
-    return :bad => "The submitted image cannot be processed."
+    Ramaze::Log.debug(file)
+    errors.add :avatar, "The submitted image cannot be processed."
+    nil
   end
 
   def update_avatar(file)
-    if avatar = Avatar.store(file, public_name, :user_id => id)
-      self.avatar = avatar
+    if new_avatar = Avatar.store(file, public_name, :user_id => id)
+      avatar.destroy if avatar
+      self.avatar = new_avatar
     end
+  rescue ArgumentError => ex
+    return if ex.message =~ /empty tempfile/i
+    Ramaze::Log.error(ex)
   end
 
-  # TODO: produce performant SQL
   def applied_to?(given_job)
-    resumes.any? do |resume|
-      resume.jobs.any? do |job|
-        given_job.id == job.id
-      end
-    end
+    Application[:user_id => id, :job_id => given_job.id]
   end
 
-  # TODO: produce performant SQL
-  def visible_to?(user)
-    return true if user.admin? or user.id == id
+  def visible_to?(given_user)
+    return true if given_user.admin? or given_user.id == id
 
-    resumes.any? do |resume|
-      resume.jobs.any? do |job|
-        job.company.user.id == user.id
-      end
-    end
+    Application[:company_id => given_user.company.id, :user_id => id]
   end
 
   def resumes_sent
-    job_resume = {}
-
-    resumes.each do |resume|
-      resume.jobs.each do |job|
-        job_resume[job] = resume
-      end
-    end
-
-    job_resume
+    Application.filter(:resume_id => resumes.map{|r| r.id })
   end
 
   def resumes_got
-    resume_job = {}
-
-    company.jobs.each do |job|
-      job.resumes.each do |resume|
-        resume_job[resume] = job
-      end
-    end
-
-    resume_job
+    Application.filter(:company_id => company.id)
   end
 
   include FormField::Model

@@ -2,7 +2,8 @@ class ResumeController < Controller
   def index
     acl 'to view your Resumes', :applicant
 
-    @resumes = user.resumes
+    @resumes = user.resumes 
+    @resumes = Resume.filter(:user_id => user.id)
   end
 
   def create
@@ -80,7 +81,7 @@ class ResumeController < Controller
         flash[:bad] = 'Permission denied'
       end
 
-      redirect_referrer
+      answer request.referrer
     else
       flash[:bad] = resume.errors.inspect
     end

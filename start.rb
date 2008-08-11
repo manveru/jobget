@@ -22,6 +22,7 @@ Ramaze.setup do
   require 'model/init'
 
   # Conf
+  global.mode = :dev
   global.adapter = :mongrel
   global.sourcereload = 1
 end

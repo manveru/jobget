@@ -30,28 +30,15 @@ class UserController < Controller
 
   def join
     pp request.params
-    @role = request[:role] || 'applicant'
+    request[:role] ||= 'applicant'
+    @user = User.prepare(request)
 
-    @user = User.new
-    @user.set_values(request.subset(*User::FORM))
+    return unless request.post?
+    return unless @user.joins
 
-    if request.post?
-      @user.password, @user.password_confirmation =
-        request[:password, :password_confirmation]
-
-      @user.crypt = User.encrypt(@user.password)
-
-      if @user.valid?
-        if request[:tos]
-          @user.save
-          user_login(:email => @user.email, :crypt => @user.crypt)
-          answer Rs(:read)
-        else
-          @user.errors.add(:tos, 'Terms of Service are not confirmed')
-          # redirect_referrer
-        end
-      end
-    end
+    user_login(:email => @user.email, :crypt => @user.crypt)
+    flash[:good] = "Welcome to #{conf.title}, you can start by filling your profile."
+    answer Rs(:read)
   end
 
   def logout
@@ -64,15 +51,18 @@ class UserController < Controller
   def edit(user_id = nil)
     must_login 'in order to access your profile'
 
-    if user.admin? and user_id
-      @user = User[user_id.to_i]
-    else
-      @user = user
-    end
+    @user = (user.admin? and user_id) ? User[user_id.to_i] : user
+
+    return unless request.post?
+
+    return unless message = @user.profile_update(request)
+    flash.merge!(message)
+    redirect_referrer
   end
 
   def read(user_id = nil)
     must_login 'in order to access this profile'
+
     @user = user_id ? User[user_id.to_i] : user
 
     unless @user.visible_to?(user)
@@ -86,33 +76,37 @@ class UserController < Controller
     paginate(@users = User, 50)
   end
 
-  def update
+  def update(user_id = nil)
+    bar
+    return
     must_login 'before updating your profile'
     must_post 'in order to update your profile'
 
-    result = user.profile_update(request)
+    @user = (user.admin? and user_id) ? User[user_id.to_i] : user
+
+    result = @user.profile_update(request)
     flash.merge! result
     redirect_referrer
   end
 
-  def update_password
+  def update_password(user_id = nil)
     must_login 'before changing your password'
+    must_post 'in order to change your password'
 
-    user.password, user.password_confirmation =
-      request[:password, :password_confirmation]
+    @user = (user.admin? and user_id) ? User[user_id.to_i] : user
 
-    user.crypt = User.encrypt(user.password)
-
-    if user.valid?
-      user.save
-
-      session.delete :USER
-      user_login(:email => user.email, :crypt => user.crypt)
+    if @user.password_update(request)
+      @user.save
       flash[:good] = 'Password changed'
 
-      redirect Rs(:read)
+      if user.id == @user.id # login again with new password
+        session.delete :USER
+        user_login(:email => @user.email, :crypt => @user.crypt)
+      end
+
+      redirect @user.to(:read)
     else
-      pp user.errors
+      pp @user.errors
     end
   end
 

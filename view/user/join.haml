@@ -3,11 +3,11 @@
     %a.applicant{:href => Rs(:join, :role => 'applicant')} Create applicant account
     %a.recruiter{:href => Rs(:join, :role => 'recruiter')} Create recruiter account
 
-  %div{:class => @role}
-    %form{:method => :POST}
+  %div{:class => @user.role}
+    %form{:method => :POST, :name => '/user/join'}
       %fieldset
-        %legend= "Create #{@role} account"
-        %input{:type => :hidden, :name => :role, :value => @role}
+        %legend= "Create #{@user.role} account"
+        %input{:type => :hidden, :name => :role, :value => @user.role}
         = @user.form_field(:email)
         = @user.form_field(:password, :password)
         = @user.form_field(:password_confirmation, :password)

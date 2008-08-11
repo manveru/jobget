@@ -4,8 +4,8 @@ Configuration.for :jobget do
 
   # :live => DB specified by db below, no init
   # :dev  => DB sqlite in memory, init executed
-  mode :dev
-  db 'sqlite://db/jobget.sqlite' # DB to use
+  # Ramaze::Global.mode = :dev
+  db 'sqlite://db/jobget.sqlite' # DB to use in live mode
 
   admin do
     email 'm.fellinger@gmail.com'

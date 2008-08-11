@@ -3,6 +3,9 @@ class Avatar < Sequel::Model
     # specifies belongs_to, will create relation and foreign key
     :owner     => :User,
 
+    # Remove original and thumbnails on #destroy
+    :cleanup   => true,
+
     # Algorithm to use in ImageScience
     #
     # * resize(width, height)

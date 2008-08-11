@@ -3,8 +3,6 @@
 %h2 Your Resumes
 
 .resumes
-  - if @resumes.empty?
-    You don't have any Resumes yet, get started by uploading one in the form in the sidebar.
   - @resumes.each do |resume|
     .resume
       %dl
@@ -15,3 +13,5 @@
         %dd= resume.preview
         %dt Last Updated:
         %dd= resume.updated_formatted
+  - if @resumes.count == 0
+    You don't have any Resumes yet, get started by uploading one in the form in the sidebar.

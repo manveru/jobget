@@ -19,17 +19,22 @@ class JobController < Controller
   end
 
   def submit_resume(job_id)
-    acl 'before submitting a Resume', :applicant
+    acl 'before submitting a resume', :applicant
 
     job = job_for(job_id)
 
+    if Application[:job_id => job.id, :user_id => user.id]
+      flash[:bad] = 'You already submitted a Resume for this job'
+    end
+
     if resume = Resume[:id => request[:resume], :user_id => user.id]
-      if resume.jobs.include?(job)
-        flash[:bad] = 'You already submitted a Resume for this job'
-      else
-        flash[:good] = 'Submitted Resume'
-        resume.add_job(job)
-      end
+      application = Application.create(:job_id => job.id, :user_id => user.id,
+                                       :company_id => job.company.id,
+                                       :resume_id => resume.id)
+
+      job.add_application(application)
+      resume.add_application(application)
+      flash[:good] = 'Submitted Resume'
     end
 
     redirect Rs(:read, job.id)
@@ -113,9 +118,9 @@ class JobController < Controller
     acl 'before deleting this job', :recruiter
 
     if job = Job[:company_id => user.company.id, :id => job_id.to_i]
-      job.delete
+      job.destroy
       flash[:good] = "Job deleted"
-      redirect_referrer
+      answer R(:/)
     else
       flash[:bad] = "The requested action is not allowed"
       redirect_referrer

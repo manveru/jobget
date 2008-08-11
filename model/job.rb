@@ -52,12 +52,6 @@ class Job < Sequel::Model
     foreign_key :company_id
   end
 
-  many_to_many :resumes
-  # User.has_many :cvs, :class=>:CV, :key=>:user_id
-  belongs_to :company
-
-  create_table unless table_exists?
-
   validations.clear
   validates do
     numericality_of :salary_low, :only_integer => true, :allow_nil => true
@@ -70,6 +64,11 @@ class Job < Sequel::Model
   hooks.clear
   before_create{ self.created_at = Time.now }
   before_save{ self.updated_at = Time.now }
+  before_destroy do # a cleanup of Applications for this Job
+    applications.each do |app|
+      app.destroy
+    end
+  end
 
 
   def self.latest(n = 10)

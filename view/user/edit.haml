@@ -1,6 +1,3 @@
-- if @user.avatar
-  %img.avatar{:src => @user.avatar.file(:medium)}
-
 = part(:submenu, UserController)
 
 .submenu
@@ -10,21 +7,19 @@
 
 .clear
 
-%form{:method => :POST, :action => Rs(:update), :enctype => 'multipart/form-data'}
+%form{:method => :POST, :action => @user.to(:edit), :enctype => 'multipart/form-data'}
   %fieldset
     %legend Update Profile
+    - if @user.avatar
+      %img.avatar{:src => @user.avatar.file(:medium)}
     = @user.form_field(:name)
     = @user.form_field(:phone)
     = @user.form_field(:location)
-    .pair
-      %label{:for => :avatar} Avatar:
-      %input{:type => :file, :name => :avatar, :id => :avatar}
-      %br/
-      May be png, jpeg, gif
+    = @user.form_field(:avatar, :file)
     ~ @user.form_field(:about, :textarea)
     = part :buttons, MainController, :value => 'Update profile'
 
-%form{:method => :POST, :action => R(UserController, :update_password)}
+%form{:method => :POST, :action => @user.to(:update_password)}
   %fieldset
     %legend Change Password
     = @user.form_field(:password, :password)

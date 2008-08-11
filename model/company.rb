@@ -7,7 +7,10 @@ class Company < Sequel::Model
     :founded   => 'Year founded',
     :text      => 'Company description',
     :employees => 'No. of Employees',
+    :logo      => 'Logo (png, jpeg, gif)',
   }
+
+  FORM_UPDATE = FORM_LABEL.keys - [:logo]
 
   set_schema do
     primary_key :id
@@ -23,12 +26,6 @@ class Company < Sequel::Model
     foreign_key :logo_id
   end
 
-  belongs_to :user
-  belongs_to :logo # has_one :logo
-  many_to_many :jobs
-
-  create_table unless table_exists?
-
   validations.clear
   validates do
     length_of :founded, :is => 4
@@ -43,7 +40,7 @@ class Company < Sequel::Model
   end
 
   def profile_update(request)
-    set_values(request.subset(*FORM_LABEL.keys))
+    set_values request.subset(*FORM_UPDATE)
 
     if file = request[:logo]
       update_logo(file)
@@ -61,10 +58,15 @@ class Company < Sequel::Model
   end
 
   def update_logo(file)
-    if logo = Logo.store(file, id, :company_id => id)
+    if new_logo = Logo.store(file, id, :company_id => id)
       self.show_logo = true
-      self.logo = logo
+
+      logo.destroy if logo
+      self.logo = new_logo
     end
+  rescue ArgumentError => ex
+    return if ex.message =~ /empty tempfile/i
+    Ramaze::Log.error(ex)
   end
 
   # Links

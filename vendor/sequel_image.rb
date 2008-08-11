@@ -32,6 +32,10 @@ module SequelImage
       self.updated_at = Time.now
     end
 
+    model.before_destroy do
+      cleanup if conf[:cleanup]
+    end
+
     # Define singleton methods
     model.extend(SingletonMethods)
 
@@ -54,6 +58,7 @@ module SequelImage
       type     = file[:type]
       filename = file[:filename]
       tempfile = file[:tempfile]
+      raise ArgumentError, 'Empty tempfile' if tempfile.size == 0
 
       ext         = Ramaze::Tool::MIME.ext_for(type)
       image.mime  = type
@@ -110,13 +115,24 @@ module SequelImage
       self.class::IMAGE
     end
 
+    def cleanup
+      conf[:sizes].each do |name, args|
+        out = public_file(name)
+        Ramaze::Log.debug "Remove Thumbnail: #{out}"
+        FileUtils.rm_f(out)
+      end
+
+      Ramaze::Log.debug "Remove original: #{original}"
+      FileUtils.rm_f(original)
+    end
+
     def generate_thumbnails
       FileUtils.mkdir_p(public_path)
 
       sizes, algorithm = conf.values_at(:sizes, :algorithm)
 
       ImageScience.with_image(original) do |img|
-        Ramaze::Log.debug "Generate Thumbnails: #{original}"
+        Ramaze::Log.debug "Process original: #{original}"
 
         sizes.each do |name, args|
           out = public_file(name)
