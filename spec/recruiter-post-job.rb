@@ -24,9 +24,42 @@ describe 'Recruiter comes to site and wants to post a job' do
     page.at(:h2).inner_text.should == 'Post Job'
   end
 
-  should 'decide to edit company first' do
+  should 'be able to edit company' do
     click_link 'Company'
     page.at(:h2).inner_text.should == 'Edit your company'
+
+    form = page.form('/company/edit')
+
+    form.set_fields :name => Faker::Company::name,
+      :founded => '1990',
+      :employees => '11-50',
+      :text => Faker::Lorem::paragraphs(3).join("\n")
+
+    submit form
+  end
+
+  should 'be able to post job' do
+    click_link 'Post job'
+    page.at(:h2).inner_text.should == 'Post Job'
+
+    form = page.form('/job/post')
+
+    form.set_fields :title => 'Ruby Developer',
+      :internal => 'ruby_dev_1',
+      :location => 'Tokyo, Japan',
+      :contract => 'Freelance',
+      :salary_interval => 'Daily',
+      :salary_low => '20000',
+      :salary_high => '30000',
+      :skills => "Ruby\nRamaze\nLinux",
+      :text => "Need ASAP"
+
+    form.checkboxes.name('public').check
+    form.checkboxes.name('open').check
+
+    submit form
+
+    page.at(:h2).inner_text.should == 'Ruby Developer'
   end
 end
 

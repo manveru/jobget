@@ -5,7 +5,7 @@
 
 %h2 Post Job
 
-%form{:method => :POST}
+%form{:method => :POST, :name => '/job/post'}
   %fieldset
     %legend Post Job
     = @job.form_field(:title)
