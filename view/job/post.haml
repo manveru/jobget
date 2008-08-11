@@ -2,6 +2,9 @@
   %a{:href => R(JobController, :manage)} Manage your Jobs
   - unless @job.new?
     = @job.href('Public View', :read)
+
+%h2 Post Job
+
 %form{:method => :POST}
   %fieldset
     %legend Post Job
