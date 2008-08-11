@@ -1,10 +1,14 @@
-Configuration.for :jobget do
+require 'rubygems'
+require 'configuration'
+require 'ramaze'
+
+conf = Configuration.for(:jobget){
   title 'Macheads'
   domain 'macheads.co.uk'
 
   # :live => DB specified by db below, no init
   # :dev  => DB sqlite in memory, init executed
-  # Ramaze::Global.mode = :dev
+  mode :dev
   db 'sqlite://db/jobget.sqlite' # DB to use in live mode
 
   admin do
@@ -33,9 +37,10 @@ Configuration.for :jobget do
     smtp_port      25
     subject_prefix "[#{title}]"
   end
-end
+}
 
-m = Configuration.for(:jobget).mail
+require 'ramaze/contrib/email'
+m = conf.mail
 
 Ramaze::EmailHelper.trait.each do |key, value|
   Ramaze::EmailHelper.trait key => m.send(key)

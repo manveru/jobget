@@ -1,5 +1,3 @@
-p :init_database
-
 module InitDatabase
   module_function
 

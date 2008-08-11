@@ -1,5 +1,3 @@
-require 'sequel'
-
 class Stat < Sequel::Model
   set_schema do
     primary_key :id

@@ -1,5 +1,3 @@
-p :init
-
 SequelRelation.relations do
   the Application do
     belongs_to User

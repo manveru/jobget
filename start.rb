@@ -18,11 +18,16 @@ Ramaze.setup do
 
   # App
   require 'env'
+
+  if ARGV.include?('--mode')
+    Ramaze::Global.merge!(ARGV)
+    Configuration.for(:jobget){ mode Ramaze::Global.mode.to_sym }
+  end
+
   require 'controller/init'
   require 'model/init'
 
   # Conf
-  global.mode = :dev
   global.adapter = :mongrel
   global.sourcereload = 1
 end

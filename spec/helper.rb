@@ -41,13 +41,15 @@ end
 
 shared 'mechanize' do
   Ramaze.skip_start
-  Ramaze::Global.mode = :spec
+
+  # This sucks, very
+  ARGV.concat ['--mode', 'spec']
+
   require 'start'
 
   Ramaze.start! :port => 7007,
     :adapter => :mongrel,
     :run_loose => true,
-    # :mode => :spec,
     :root => __DIR__/'..'
 
   require 'mechanize'

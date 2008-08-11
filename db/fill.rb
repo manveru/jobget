@@ -1,5 +1,4 @@
 require 'db/init_database'
-p :fill
 
 conf = Configuration.for(:jobget)
 init = InitDatabase

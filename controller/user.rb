@@ -29,7 +29,6 @@ class UserController < Controller
   end
 
   def join
-    pp request.params
     request[:role] ||= 'applicant'
     @user = User.prepare(request)
 
