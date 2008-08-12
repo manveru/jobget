@@ -45,7 +45,7 @@ class Job < Sequel::Model
 
     date :starts_at
 
-    boolean :featured, :default => true
+    boolean :featured, :default => false
     boolean :public, :default => true
     boolean :open, :default => true
 
