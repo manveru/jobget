@@ -8,6 +8,11 @@ require 'ramaze'
 
 # Contrib
 require 'ramaze/contrib/email'
+require 'ramaze/contrib/paginator'
+require 'ramaze/contrib/sequel/image'
+require 'ramaze/contrib/sequel/create_join'
+require 'ramaze/contrib/sequel/form_field'
+require 'ramaze/contrib/sequel/relation'
 require 'ramaze/setup'
 
 Ramaze.setup do
