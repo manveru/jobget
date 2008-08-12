@@ -1,7 +1,9 @@
 class MainController < Controller
   def index
-    # Use .all to force use of :eager
-    @featured = Job.featured(5).all
-    @latest = Job.latest(5).all
+    @featured = Job.featured
+    @f_pager = paginate(@featured, :limit => 3, :var => :featured)
+
+    @latest = Job.latest
+    @l_pager = paginate(@latest, :limit => 3, :var => :latest)
   end
 end

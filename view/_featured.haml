@@ -1,4 +1,6 @@
 .featured
   %h2 Featured
-  - @featured.each do |job|
+  = pager_navigation
+  - @pager.each do |job|
     = part(:job, MainController, :job => job)
+  = pager_navigation

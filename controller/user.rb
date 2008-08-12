@@ -72,7 +72,7 @@ class UserController < Controller
 
   def list
     acl 'to see this page', :admin
-    paginate(@users = User, 50)
+    pager(@users = User, 50)
   end
 
   def update(user_id = nil)

@@ -71,12 +71,14 @@ class Job < Sequel::Model
   end
 
 
-  def self.latest(n = 10)
-    available.limit(n).filter(:featured => false)
+  def self.latest(n = nil)
+    f = available.filter(:featured => false)
+    n ? f.limit(n) : f
   end
 
-  def self.featured(n = 10)
-    available.limit(n).filter(:featured => true)
+  def self.featured(n = nil)
+    f = available.filter(:featured => true)
+    n ? f.limit(n) : f
   end
 
   def self.available(n = 10)

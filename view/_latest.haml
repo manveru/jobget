@@ -1,4 +1,6 @@
 .latest
   %h2 Latest
-  - @jobs.each do |job|
+  = pager_navigation
+  - @pager.each do |job|
     = render_template('_job.haml', :job => job)
+  = pager_navigation

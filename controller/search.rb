@@ -17,7 +17,7 @@ class SearchController < Controller
     Stat.log_search(:terms => @q, :category => @only)
 
     @results.uniq!
-    paginate @results
+    pager @results
   end
 
   def resume
@@ -29,7 +29,7 @@ class SearchController < Controller
       @results = []
     end
 
-    paginate @results
+    pager @results
   end
 
   private

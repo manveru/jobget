@@ -47,7 +47,7 @@ class Controller < Ramaze::Controller
     end
   end
 
-  def paginate(dataset, limit = 5)
+  def pager(dataset, limit = 5)
     @pager = paginate(dataset, :limit => limit)
   end
 
