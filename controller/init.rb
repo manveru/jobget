@@ -1,6 +1,6 @@
 class Controller < Ramaze::Controller
   map nil
-  helper :xhtml, :user, :stack, :formatting
+  helper :xhtml, :user, :stack, :formatting, :paginate
   engine :Haml
   layout '/layout'
 
