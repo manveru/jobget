@@ -45,6 +45,11 @@ class Any2Text
     :html => lambda{|path| popen("html2text", "-nobs", "-ascii", path) },
   }
 
+  # Useful for automatic checks on usability
+  DEPENDENCIES = %w[
+    antiword pdftotext odt2txt html2text
+  ]
+
   class Error   < StandardError; end
   class PopenError      < Error; end
   class CannotConvert   < Error; end
