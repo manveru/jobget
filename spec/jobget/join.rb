@@ -53,13 +53,6 @@ describe 'User join' do
     page.at('.error').inner_text.should =~ /Minimum 6 characters/
   end
 
-  should 'not perform join with short password' do
-    join_with :applicant, :email => email,
-      :password => 'foo',
-      :password_confirmation => 'foo'
-    page.at('.error').inner_text.should =~ /Minimum 6 characters/
-  end
-
   # Valid join
 
   should 'perform join with correct values' do
