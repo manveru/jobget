@@ -1,7 +1,8 @@
-= part(:company, JobController, :company => user.company)
+= JobGet::Jobs.render_partial(:company, :company => user.company)
+
 .section
   %h4 Post Job
   %p
     = "Post a new Job on #{conf.title}."
     Targeted, results-based, risk-free hiring.
-  %a{:href => R(JobController, :post), :class => :button} Post job
+  %a{:href => JobGet::Jobs.r(:post), :class => :button} Post job

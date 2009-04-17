@@ -1,5 +1,5 @@
 module JobGet
-  class JobController < Controller
+  class Jobs < Controller
     map '/job'
 
     def read(job_id)
@@ -148,7 +148,7 @@ module JobGet
 
       if @resumes.empty?
         flash[:bad] = 'Please create a Resume before you apply'
-        call UserController.r(:read)
+        call Users.r(:read)
       end
     end
 

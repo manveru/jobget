@@ -1,23 +1,16 @@
 module JobGet
-  class SearchController < Controller
-    def index
-      @by = %w[any job skill company]
-      @q, @only = request[:q, :only]
-      @only ||= 'any'
-      @results = []
+  class Searches < Controller
+    map '/search'
 
-      if @q
-        case @only
-        when *@by
-          send("search_#@only")
-        else
-          search_any
-        end
-      end
+    def index
+      @q, @only = request[:q, :only]
+      @categories = %w[any job skill company]
+      @only ||= 'any'
+
+      @results = Job.search(@only, *@q.scan(/\S+/))
 
       Stat.log_search(:terms => @q, :category => @only)
 
-      @results.uniq!
       pager @results
     end
 
@@ -25,7 +18,7 @@ module JobGet
       acl "to search for resumes", :recruiter
 
       if resume = request[:resume]
-        @results = Resume.search(resume).all
+        @results = Resume.search(resume)
       else
         @results = []
       end
@@ -36,15 +29,15 @@ module JobGet
     private
 
     def search_any
-      search_skill
-      search_job
-      search_company
+      @results = Job.available
     end
 
     def search_skill
+      @results = Job.search_skill(@q)
+
       @results += Job.available.filter{|job|
         job.skills.like("%#@q%")
-      }.all
+      }
     end
 
     def search_job

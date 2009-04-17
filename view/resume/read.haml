@@ -1,5 +1,5 @@
 .submenu
-  %a{:href => R(ResumeController)} Your Resumes
+  = a 'Your Resumes', :/
   %a{:href => @resume.to(:download), :target => :_blank} Download original
   %a{:href => @resume.to(:delete)} Delete
   %a{:href => @resume.to(:toggle_public)}= @resume.public ? 'Make private' : 'Make public'

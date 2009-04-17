@@ -3,8 +3,8 @@
 .job_read
   - if company == user.company
     .submenu
-      %a{:href => R(JobController, :manage)} Manage your Jobs
-      = part :crud_menu, JobController, :job => @job
+      %a{:href => r(:manage)} Manage your Jobs
+      = JobGet::Jobs.render_partial(:crud_menu, :job => @job)
   .job
     %h2= @job.title
     - if company.show_logo
@@ -23,7 +23,7 @@
       %dt Location:
       %dd= @job.location
 
-      = part :skills, JobController, :skills => @job.skill_list
+      = JobGet::Jobs.render_partial(:skills, :skills => @job.skill_list)
 
     = Maruku.new(h @job.text).to_html
 

@@ -34,6 +34,10 @@ module JobGet
 
       create(:ip => ip, :referrer => referrer, :job_view_stat_id => view.id)
     end
+
+    def self.for_ip(ip)
+      filter(:ip => ip).order(:created_at.desc)
+    end
   end
 
   class SearchStat < Sequel::Model

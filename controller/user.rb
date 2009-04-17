@@ -1,5 +1,11 @@
 module JobGet
-  class UserController < Controller
+  class Users < Controller
+    map '/user'
+
+    def index
+      redirect Main.r(:/)
+    end
+
     def login
       @email, @password = request[:email, :password]
 
@@ -57,7 +63,7 @@ module JobGet
 
       return unless message = @user.profile_update(request)
       flash.merge!(message)
-      redirect_referrer
+      answer r(:read)
     end
 
     def read(user_id = nil)
@@ -140,7 +146,7 @@ module JobGet
 
         flash[:good] = "We sent you an email that allows you to login. Please change your password as soon as possible."
 
-        redirect R(MainController, :/)
+        redirect R(Main, :/)
       else
         flash[:bad] = "No user for this address found"
         redirect_referrer

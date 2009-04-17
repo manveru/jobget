@@ -23,37 +23,37 @@
           - if logged_in?
             Logged in as
             = user.role.capitalize
-            = UserController.a(user.public_name, :read)
-            = UserController.a('Logout', :logout)
+            = JobGet::Users.a(user.public_name, :read)
+            = JobGet::Users.a('Logout', :logout)
           - else
-            = UserController.a('Join', :join)
-            = UserController.a('Login', :login)
+            = JobGet::Users.a('Join', :join)
+            = JobGet::Users.a('Login', :login)
         .nav
-          %a{:href => JobController.r(:browse)} Browse jobs
+          %a{:href => JobGet::Jobs.r(:browse)} Browse jobs
           - if logged_in?
-            = UserController.a('Profile', :read)
+            = JobGet::Users.a('Profile', :read)
             - if user.admin?
               .admin
                 %span.section
                   %b Applicant
-                  = ResumeController.a 'Resumes'
-                  = ApplicationController.a 'Applications'
+                  = JobGet::Resumes.a 'Resumes', :/
+                  = JobGet::Applications.a 'Applications', :/
                 %span.section
                   %b Recruiter
-                  = ApplicationController.a 'Applications'
-                  = CompanyController.a 'Company', :edit
-                  = JobController.a 'Jobs', :manage
+                  = JobGet::Applications.a 'Applications', :/
+                  = JobGet::Companies.a 'Company', :edit
+                  = JobGet::Jobs.a 'Jobs', :manage
                 %span.section
                   %b Admin
-                  = StatController.a 'Statistics'
-                  = UserController.a 'Users', :list
+                  = JobGet::Stats.a 'Statistics', :/
+                  = JobGet::Users.a 'Users', :list
             - elsif user.recruiter?
-              = ApplicationController.a 'Applications'
-              = CompanyController.a 'Company', :edit
-              = JobController.a 'Jobs', :manage
+              = JobGet::Applications.a 'Applications', :/
+              = JobGet::Companies.a 'Company', :edit
+              = JobGet::Jobs.a 'Jobs', :manage
             - elsif user.applicant?
-              = ResumeController.a 'Resumes'
-              = ApplicationController.a 'Applications'
+              = JobGet::Resumes.a 'Resumes', :/
+              = JobGet::Applications.a 'Applications', :/
 
     .middle
       .content
@@ -61,7 +61,7 @@
       .sidebar
         = flashbox("<div class='section'><p class='flash-%key'>%value</p></div>")
         .section
-          %form{:action => SearchController.r}
+          %form{:action => JobGet::Searches.r}
             %fieldset
               %label{:for => :search}
                 %h4 Search for a job
@@ -69,12 +69,12 @@
               %input{:type => :text, :id => :search, :name => :q, :value => request[:q]}
         - if user.recruiter?
           .section
-            %form{:action => SearchController.r(:resume)}
+            %form{:action => JobGet::Searches.r(:resume)}
               %fieldset
                 %label{:for => :search_resume}
                   %h4 Search for a Resume
                 %input{:type => :text, :id => :search_resume, :name => :resume, :value => request[:resume]}
-        = part(:sidebar)
+        = render_partial(:sidebar)
 
     .bottom
       %a{:href => '/help'} Help

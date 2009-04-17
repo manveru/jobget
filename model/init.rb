@@ -1,13 +1,15 @@
 module JobGet
   DB = Sequel.sqlite
+
+  Sequel::Model.plugin(:schema)
+  Sequel::Model.plugin(:hook_class_methods)
+  Sequel::Model.plugin(:validation_class_methods)
+
+  Ramaze.acquire('model/*.rb')
+  require 'db/init_relations'
+
+  User.create_admin
 end
-
-Sequel::Model.plugin(:schema)
-Sequel::Model.plugin(:hook_class_methods)
-Sequel::Model.plugin(:validation_class_methods)
-
-Ramaze.acquire('model/*.rb')
-require 'db/init_relations'
 
 __END__
 

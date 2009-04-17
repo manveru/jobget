@@ -1,5 +1,5 @@
 - if @job and not @job.new?
-  = part(:company, JobController, :company => @job.company)
+  = JobGet::Jobs.render_partial(:company, :company => @job.company)
   .section.related-jobs
     %h4 Related Jobs
     - related = @job.related
@@ -13,4 +13,4 @@
     %p
       = "Post a new Job on #{conf.title}."
       Targeted, results-based, risk-free hiring.
-    %a{:href => R(JobController, :post), :class => :button} Post job
+    %a{:href => JobGet::Jobs.r(:post), :class => :button} Post job

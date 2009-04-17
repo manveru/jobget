@@ -1,5 +1,7 @@
 module JobGet
-  class ResumeController < Controller
+  class Resumes < Controller
+    map '/resume'
+
     def index
       acl 'to view your Resumes', :applicant
 
@@ -46,12 +48,7 @@ module JobGet
 
       if resume = Resume[id.to_i]
         if user == resume.user or resume.companies === user.company
-          # response['Content-Disposition'] = resume.link_ref + ".#{ext}"
-          response['Content-Type'] = resume.mime
-          respond File.open(resume.original)
-          # if user.company == resume.company or user == resume.user
-          #   pp resume
-          # end
+          send_file resume.original, resume.mime
         end
       end
     end
@@ -69,7 +66,7 @@ module JobGet
         flash[:bad] = "Requested Resume wasn't found"
       end
 
-      redirect Rs(:/)
+      redirect r(:/)
     end
 
     private

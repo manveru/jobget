@@ -1,11 +1,10 @@
 %h3
-  %a{:href => R(SearchController, :only => search.category, :q => search.terms)}
-    = "Search for %p in %p" % [search.terms, search.category]
+  = Searches.a(@title, :only => @category, :q => @terms)
 %dl
   %dt Time:
-  %dd= stat.created_at.utc
+  %dd= @stat.created_at.utc
   %dt IP:
-  %dd= stat.ip
+  %dd= @stat.ip
   %dt Referrer:
   %dd
-    %a{:href => stat.referrer}= stat.referrer
+    %a{:href => @stat.referrer}= @stat.referrer

@@ -1,24 +1,24 @@
-= part(:submenu, UserController)
+= JobGet::Users.render_partial(:submenu)
 
 .company
 
   %h2= "Edit #{h(@company.name || 'your company')}"
 
-  %form{:method => :POST, :name => '/company/edit', :enctype => 'multipart/form-data'}
+  %form{:method => :POST, :name => r(:edit), :enctype => 'multipart/form-data'}
     %fieldset
       %legend Edit Company
       .logo
         #image-box
           - if @company.show_logo
-            %a{:href => Rs(:toggle_logo)}
+            %a{:href => r(:toggle_logo)}
               %img{:src => @company.logo.small_url}
               .status
                 Logo shown
           - elsif @company.logo
-            %a{:href => Rs(:toggle_logo)}
+            %a{:href => r(:toggle_logo)}
               %img#original-logo{:src => @company.logo.small_url}
               %img#grey-overlay{:src => '/grey.png'}
-              %script{:type => 'text/javascript'}
+              :javascript
                 var logo = document.getElementById('original-logo');
                 var overlay = document.getElementById('grey-overlay');
                 overlay.width = logo.width;
@@ -30,4 +30,4 @@
       = @company.form_field(:employees, %w[1-10 11-50 51-100 101-500 501-1000 1000+])
       = @company.form_field(:logo, :file)
       = @company.form_field(:text)
-      = part :buttons, MainController, :value => 'Update Company'
+      = JobGet::Main.render_partial(:buttons, :value => 'Update Company')

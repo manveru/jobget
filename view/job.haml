@@ -8,7 +8,7 @@
     %dd= @job.salary
     %dt Location:
     %dd= h @job.location
-    = part :skills, JobController, :skills => @job.skill_list
+    = JobGet::Jobs.render_partial(:skills, :skills => @job.skill_list)
 
 
   %p= @job.preview

@@ -1,5 +1,7 @@
 module JobGet
-  class CompanyController < Controller
+  class Companies < Controller
+    map '/company'
+
     def edit
       acl "in order to change company details", :recruiter
       @company = user.company

@@ -1,0 +1,5 @@
+%h2 Contact us
+
+%p
+  - title, name, email = conf.title, conf.admin.name, conf.admin.email
+  = "You can contact #{name}, the admin of #{title}, by #{email}"

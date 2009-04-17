@@ -1,11 +1,11 @@
 .submenu
-  %a{:href => R(JobController, :manage)} Manage your Jobs
+  %a{:href => r(:manage)} Manage your Jobs
   - unless @job.new?
     = @job.href('Public View', :read)
 
 %h2 Post Job
 
-%form{:method => :POST, :name => '/job/post'}
+%form{:method => :POST, :name => r(:post)}
   %fieldset
     %legend Post Job
     = @job.form_field(:title)
@@ -19,4 +19,4 @@
     = @job.form_field(:open)
     ~ @job.form_field(:skills)
     ~ @job.form_field(:text)
-    = part :buttons, MainController, :value => 'Post Job'
+    = JobGet::Main.render_partial(:buttons, :value => 'Post Job')

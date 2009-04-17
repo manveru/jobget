@@ -73,7 +73,7 @@ module JobGet
     # Links
 
     def to_search
-      R(SearchController, :q => name, :only => :company)
+      Searches.r(:/, :q => name, :only => :company)
     end
   end
 end

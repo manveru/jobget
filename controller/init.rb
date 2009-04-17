@@ -3,8 +3,15 @@ module JobGet
     helper :xhtml, :user, :stack, :formatting, :paginate
     engine :Haml
     layout 'default'
+    map_layouts '/'
 
     trait :user_model => User
+
+
+    # add sidebars in the view/xxx/sidebar.haml directories to override this.
+    def sidebar
+      ''
+    end
 
     private
 
@@ -15,7 +22,7 @@ module JobGet
     def must_login(message, target = nil)
       return if logged_in?
       flash[:bad] = "You have to login #{message}"
-      call target || UserController.r(:login)
+      call target || Users.r(:login)
     end
 
     def must_post(message, target = nil)

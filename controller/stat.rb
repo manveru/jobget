@@ -1,8 +1,15 @@
 module JobGet
-  class StatController < Controller
+  class Stats < Controller
+    map '/stat'
+
     def index
-      @stats = Stat.filter(:ip => request.ip).order(:created_at.desc)
+      @stats = Stat.for_ip(request.ip)
       pager @stats
+    end
+
+    def search
+      @terms, @cateogry = @search.terms, @search.category
+      @title ="Search for %p in %p" % [@terms, @category]
     end
   end
 end

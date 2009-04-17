@@ -1,7 +1,7 @@
 - unless logged_in?
   .section.login
     %h4 Login
-    %form{:action => R(UserController, :login), :method => :POST}
+    %form{:action => JobGet::Users.r(:login), :method => :POST}
       .pair
         %label{:for => :email} Email:
         %input{:type => :text, :name => :email, :id => :email}
@@ -12,15 +12,15 @@
 
       .clear
       %input{:type => :submit, :value => 'Login', :class => :button}
-      %a{:href => :forgot} Forgot Password?
+      = JobGet::Users.a("Forgot password?", :forgot)
 
   .section
     %h4= "Join #{conf.title}"
-    %a{:href => R(UserController, :join), :class => :button} Sign Up
+    %a{:href => JobGet::Users.r(:join), :class => :button} Sign Up
 - if user.recruiter? or not logged_in?
   .section
     %h4 Post Job
     %p
       = "Post a new Job on #{conf.title}."
       Targeted, results-based, risk-free hiring.
-    %a{:href => R(JobController, :post), :class => :button} Post job
+    %a{:href => JobGet::Jobs.r(:post), :class => :button} Post job

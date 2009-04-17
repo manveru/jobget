@@ -1,4 +1,4 @@
-= part(:submenu, UserController)
+= JobGet::Users.render_partial(:submenu)
 
 .submenu
   %a{:href => @user.to(:read)} View public profile
@@ -17,11 +17,11 @@
     = @user.form_field(:location)
     = @user.form_field(:avatar, :file)
     ~ @user.form_field(:about, :textarea)
-    = part :buttons, MainController, :value => 'Update profile'
+    = JobGet::Main.render_partial(:buttons, :value => 'Update profile')
 
 %form{:method => :POST, :action => @user.to(:update_password)}
   %fieldset
     %legend Change Password
     = @user.form_field(:password, :password)
     = @user.form_field(:password_confirmation, :password)
-    = part :buttons, MainController, :value => 'Change Password'
+    = JobGet::Main.render_partial(:buttons, :value => 'Change Password')

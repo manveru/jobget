@@ -8,6 +8,6 @@
       .pair
         %label{:for => :password} Password:
         %input{:type => :password, :name => :password, :value => @password}
-      = part :buttons, MainController, :value => 'Login'
-  %a{:href => R(UserController, :join)} Don't have an account yet?
-  %a{:href => R(UserController, :forgot)} Forgot your password?
+      = JobGet::Main.render_partial(:buttons, :value => 'Login')
+  = JobGet::Users.a("Don't have an account yet?", :join)
+  = JobGet::Users.a("Forgot your password?", :forgot)

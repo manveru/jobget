@@ -1,8 +1,8 @@
-%form{:action => Rs(:submit_resume, @job.id), :method => :POST}
+%form{:action => r(:submit_resume, @job.id), :method => :POST}
   %fielset
     %legend
       %h2
-        = "Apply for #{@job.title}"
+        = "Apply for #{h @job.title}"
     .pair
       %label{:for => :resume} Select the Resume to use:
       %select{:name => :resume, :id => :resume}

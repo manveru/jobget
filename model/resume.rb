@@ -89,9 +89,13 @@ module JobGet
 
     include ModelLink
 
+    def to(action, *args)
+      Resumes.r(action, link_ref, *args)
+    end
+
     def to_download
       ext = Any2Text::MIME_ID[mime]
-      R(ResumeController, :download, link_ref + ".#{ext}")
+      Resumes.r(:download, link_ref + ".#{ext}")
     end
 
     include FormField::Model

@@ -23,9 +23,9 @@ require 'ramaze/contrib/sequel/relation'
 # Vendor
 Ramaze::acquire('vendor/*.rb')
 
+# configuration
+require 'env'
+
 # app
 require 'model/init'
 require 'controller/init'
-
-# configuration
-require 'env'

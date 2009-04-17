@@ -1,10 +1,10 @@
 .section
   %h4
-    %a{:href => R(ResumeController)} Your Resumes
+    = a('Your Resumes', :/)
   - user.resumes.each do |resume|
-    = part(:resume, ResumeController, :resume => resume)
+    = render_partial(:resume, :resume => resume)
 .section.resume-upload
-  %form{:method => :POST, :action => R(ResumeController, :create), :enctype => 'multipart/form-data'}
+  %form{:method => :POST, :action => r(:create), :enctype => 'multipart/form-data'}
     %fieldset
       %legend Upload Resume
       .pair
@@ -13,7 +13,7 @@
       .pair
         %label{:for => :file} File:
         %input{:type => :file, :name => :file, :id => :file}
-      = part :buttons, MainController, :value => 'Upload Resume'
+      = JobGet::Main.render_partial(:buttons, :value => 'Upload Resume')
       %p
         Accepted formats are:
         %ul

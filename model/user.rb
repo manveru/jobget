@@ -1,7 +1,5 @@
 module JobGet
   class User < Sequel::Model
-    # self.raise_on_save_failure = false
-
     FORM_LABEL = {
       :tos        => %(I have read and accept the <a href="/tos">Terms of Service</a>),
       :role       => 'User Role',
@@ -66,9 +64,9 @@ module JobGet
         :message => "Minimum #{email_size} characters"
       format_of :email, :with => /^.+@..+\...+/
 
-        format_of :role, :with => /\A(admin|recruiter|applicant)\Z/
+      format_of :role, :with => /\A(admin|recruiter|applicant)\Z/
 
-        length_of :name, :minimum => 2, :allow_nil => true,
+      length_of :name, :minimum => 2, :allow_nil => true,
         :message => 'Minimum 2 characters'
       length_of :name, :maximum => 50, :allow_nil => true,
         :message => 'Maximum 50 characters'
@@ -152,8 +150,7 @@ module JobGet
       self.reset_hash = hash
       save
 
-      link = R(UserController, :forgot_login, :email => email, :hash => hash)
-      link = URI(link)
+      link = Users.r(:forgot_login, :email => email, :hash => hash)
       link.host = c.domain
       link.scheme = 'http'
       link
@@ -255,8 +252,33 @@ module JobGet
 
     include ModelLink
 
+    def to(action, *args)
+      Users.r(action, link_ref, *args)
+    end
+
     def link_ref
       [id, *public_name.scan(/\w+/)].join('-').downcase
+    end
+
+    def self.create_admin
+      return if self[:role => 'admin']
+
+      config = JobGet.options.admin
+
+      hash = {
+        :email    => config.email,
+        :name     => config.name,
+        :password => config.password,
+        :location => config.location,
+        :about    => config.about,
+        :phone    => config.phone,
+        :role     => 'admin',
+      }
+
+      admin = new_encrypted(hash)
+      admin.save
+      pp admin
+      return admin
     end
   end
 end

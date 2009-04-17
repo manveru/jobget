@@ -1,5 +1,7 @@
 module JobGet
-  class MainController < Controller
+  class Main < Controller
+    map '/'
+
     def index
       @featured = Job.featured
       @f_pager = paginate(@featured, :limit => 3, :var => :featured)

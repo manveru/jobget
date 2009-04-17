@@ -13,4 +13,4 @@
         = @user.form_field(:password_confirmation, :password)
         = @user.form_field(:tos, :boolean)
         = @user.form_field(:newsletter)
-        = part :buttons, MainController, :value => 'Create Account'
+        = JobGet::Main.render_partial(:buttons, :value => 'Create Account')

@@ -80,30 +80,55 @@ module JobGet
       n ? f.limit(n) : f
     end
 
-    def self.available(n = 10)
-      filter(:open => true, :public => true).
-        eager(:company).
-        order(:updated_at.desc)
+    def self.available(n = nil)
+      f = filter(:open => true, :public => true).
+            eager(:company).
+            order(:updated_at.desc)
+      n ? f.limit(n) : f
     end
 
     def available?
       open and public
     end
 
-    def self.search(*words)
-      terms = words.map{|word| "%#{word}%" }
+    def self.search(category, *words)
+      case category
+      when /any/
+        search_any(*words)
+      when /job/
+        search_job(*words)
+      when /skill/
+        search_skill(*words)
+      when /company/
+        search_company(*words)
+      else
+        raise(ArgumentError, "No search for this category available")
+      end
+    end
 
-      available.filter{|job|
-        job.title.like(*terms) |
-          job.text.like(*terms) |
-          job.skills.like(*terms)
-      }.all
+    def self.search_any(*words)
+      terms = words.map{|word| "%#{word}%" }
+      available.filter([:title, :text, :skills].sql_string_join.like(*terms))
+    end
+
+    def self.search_job(*words)
+      terms = words.map{|word| "%#{word}%" }
+      available.filter([:title, :text, :skills].sql_string_join.like(*terms))
+    end
+
+    def self.search_skill(*words)
+      terms = words.map{|word| "%#{word}%" }
+      available.filter(:skills.like(*terms))
+    end
+
+    def self.search_company(*words)
+      Company.search(*words)
     end
 
     def related(n = 5)
       words = title.to_s.scan(/\w+/)
       words += skills.to_s.scan(/\w+/)
-      (Job.search(*words) - [self]).first(n)
+      Job.search(*words).filter(~{:id => id})
     end
 
     # View

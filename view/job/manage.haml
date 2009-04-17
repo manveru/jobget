@@ -1,13 +1,13 @@
-= part(:submenu, UserController)
+= JobGet::Users.render_partial(:submenu)
 %h2= "#{@jobs.count} Jobs from #{h @company.name}"
 
 .job-manage
   - if @jobs.empty?
     You haven't posted any jobs yet.
     Get started by
-    %a{:href => R(CompanyController, :edit)} updating your company information
+    = JobGet::Companies.a('updating your company information', :edit)
     and then
-    %a{:href => R(JobController, :post)} Post your first job.
+    = JobGet::Jobs.a('Post your first job.', :post)
   - @jobs.each do |job|
     .job
       = job.href(job.title, :read)
@@ -20,4 +20,4 @@
         %dd= job.location
       %p= job.preview
       .edit
-        = part :crud_menu, JobController, :job => job
+        = JobGet::Jobs.render_partial(:crud_menu, :job => job)

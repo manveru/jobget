@@ -2,5 +2,5 @@
   %h2 Featured
   = pager_navigation
   - @pager.each do |job|
-    = part(:job, MainController, :job => job)
+    = part(:job, Main, :job => job)
   = pager_navigation

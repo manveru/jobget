@@ -2,7 +2,10 @@
   %form{:method => :POST}
     %fieldset
       %legend Forgot password
+      %p
+        In case you cannot remember your password, we will send you a link that
+        allows you to reset your password.
       .pair
         %label{:for => :email} E-mail:
         %input{:type => :text, :name => :email, :value => @email}
-      = part :buttons, MainController, :value => 'Reset my password'
+      = JobGet::Main.render_partial(:buttons, :value => 'Reset my password')

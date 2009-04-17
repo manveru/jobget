@@ -1,9 +1,9 @@
-- if @by
+- if @categories
   .section
     %h4 Refine Search
-    - @by.each do |by|
-      - if @only == by
-        = "Search by #{by}"
+    - @categories.each do |category|
+      - if @only == category
+        = "Search by #{category}"
       - else
-        %a{:href => Rs(:search, :q => @q, :only => by)}= "Search by #{by}"
+        = JobGet::Searches.a("Search by #{category}", :/, :q => @q, :only => category)
       %br/

@@ -6,8 +6,8 @@
   %p No Statistics collected yet.
 - @pager.each do |stat|
   - if view = stat.job_view_stat
-    = part(:view, StatController, :stat => stat, :view => view)
+    = render_partial(:view, Stats, :stat => stat, :view => view)
   - if search = stat.search_stat
-    = part(:search, StatController, :stat => stat, :search => search)
+    = render_partial(:search, Stats, :stat => stat, :search => search)
 
 = pager_navigation

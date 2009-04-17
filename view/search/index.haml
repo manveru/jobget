@@ -1,9 +1,10 @@
 .search
+  - pp @pager
   - if @pager.empty?
-    %h2= "No results for '#{h @q}' from #{Job.available.count} Jobs"
+    %h2= "No results for '#{h @q}' from #{JobGet::Job.available.count} Jobs"
   - else
-    %h2= "#{@results.size} Results for '#{h(@q)}' from #{Job.available.count} Jobs"
+    %h2= "#{@results.size} Results for '#{h @q}' from #{Job.available.count} Jobs"
     = pager_navigation
     - @pager.each do |job|
-      = part :job, MainController, :job => job
+      = JobGet::Main.render_partial(:job, :job => job)
     = pager_navigation
