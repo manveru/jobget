@@ -23,37 +23,37 @@
           - if logged_in?
             Logged in as
             = user.role.capitalize
-            %a{:href => R(UserController, :read)}= user.public_name
-            %a{:href => R(UserController, :logout)} Logout
+            = UserController.a(user.public_name, :read)
+            = UserController.a('Logout', :logout)
           - else
-            %a{:href => R(UserController, :join)} Join
-            %a{:href => R(UserController, :login)} Login
+            = UserController.a('Join', :join)
+            = UserController.a('Login', :login)
         .nav
-          %a{:href => R(JobController, :browse)} Browse jobs
+          %a{:href => JobController.r(:browse)} Browse jobs
           - if logged_in?
-            %a{:href => R(UserController, :read)} Profile
+            = UserController.a('Profile', :read)
             - if user.admin?
               .admin
                 %span.section
                   %b Applicant
-                  %a{:href => R(ResumeController)} Resumes
-                  %a{:href => R(ApplicationController)} Applications
+                  = ResumeController.a 'Resumes'
+                  = ApplicationController.a 'Applications'
                 %span.section
                   %b Recruiter
-                  %a{:href => R(ApplicationController)} Applications
-                  %a{:href => R(CompanyController, :edit)} Company
-                  %a{:href => R(JobController, :manage)} Jobs
+                  = ApplicationController.a 'Applications'
+                  = CompanyController.a 'Company', :edit
+                  = JobController.a 'Jobs', :manage
                 %span.section
                   %b Admin
-                  %a{:href => R(StatController)} Statistics
-                  %a{:href => R(UserController, :list)} Users
+                  = StatController.a 'Statistics'
+                  = UserController.a 'Users', :list
             - elsif user.recruiter?
-              %a{:href => R(ApplicationController)} Applications
-              %a{:href => R(CompanyController, :edit)} Company
-              %a{:href => R(JobController, :manage)} Jobs
+              = ApplicationController.a 'Applications'
+              = CompanyController.a 'Company', :edit
+              = JobController.a 'Jobs', :manage
             - elsif user.applicant?
-              %a{:href => R(ResumeController)} Resumes
-              %a{:href => R(ApplicationController)} Applications
+              = ResumeController.a 'Resumes'
+              = ApplicationController.a 'Applications'
 
     .middle
       .content
@@ -61,7 +61,7 @@
       .sidebar
         = flashbox("<div class='section'><p class='flash-%key'>%value</p></div>")
         .section
-          %form{:action => R(SearchController)}
+          %form{:action => SearchController.r}
             %fieldset
               %label{:for => :search}
                 %h4 Search for a job
@@ -69,7 +69,7 @@
               %input{:type => :text, :id => :search, :name => :q, :value => request[:q]}
         - if user.recruiter?
           .section
-            %form{:action => R(SearchController, :resume)}
+            %form{:action => SearchController.r(:resume)}
               %fieldset
                 %label{:for => :search_resume}
                   %h4 Search for a Resume

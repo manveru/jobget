@@ -1,3 +1,16 @@
+module JobGet
+  DB = Sequel.sqlite
+end
+
+Sequel::Model.plugin(:schema)
+Sequel::Model.plugin(:hook_class_methods)
+Sequel::Model.plugin(:validation_class_methods)
+
+Ramaze.acquire('model/*.rb')
+require 'db/init_relations'
+
+__END__
+
 conf = Configuration.for(:jobget)
 
 case conf.mode.to_sym

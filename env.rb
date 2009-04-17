@@ -1,54 +1,50 @@
 require 'rubygems'
-require 'configuration'
 require 'ramaze'
 
-conf = Configuration.for(:jobget){
-  title 'Macheads'
-  domain 'macheads.co.uk'
+module JobGet
+  include Ramaze::Optioned
 
-  # :live => DB specified by db below, no init
-  # :dev  => DB sqlite in memory, init executed
-  mode :dev
-  db 'sqlite://db/jobget.sqlite' # DB to use in live mode
+  options.dsl do
+    o 'Site title', :title,
+      'JobGet'
 
-  admin do
-    email 'm.fellinger@gmail.com'
-    name "Michael Fellinger"
-    password 'letmein'
-    location 'Tokyo, Japan'
-    about 'The admin. Got root'
-    phone '777 777 777' # don't call or the world will implode
+    o 'Site domain', :domain,
+      'jobget.ramaze.net'
+
+    sub :admin do
+      o 'email address',    :email,    'm.fellinger@gmail.com'
+      o 'Full name',        :name,     'Michael Fellinger'
+      o 'Default password', :password, 'letmein'
+      o 'Location',         :location, 'Tokyo, Japan'
+      o 'About you',        :about,    'The admin. Got root!'
+      o 'Phone number',     :phone,    '777 777 777'
+    end
+
+    sub :mail do
+      o 'SMTP Server', :smtp_server,
+        'localhost'
+      o 'HELO Domain', :smtp_helo_domain,
+        domain
+      o 'SMTP Username', :smtp_username,
+        'user'
+      o 'SMTP Password', :smtp_password,
+        'pass'
+      o 'Address of sender', :sender_address,
+        "no-reply@#{domain}"
+
+      # Following are optional, but you might want to set them
+      o 'BCC Addresses', :bcc_addresses,
+        ["admin@#{domain}"]
+      o 'ID generating block', :id_generator,
+        lambda{ "<#{Time.now.to_i}@#{smtp_helo_domain}>" }
+      o 'Displayed address of sender', :sender_full,
+        "MailBot <#{sender_address}>"
+      o 'Type of authentication for SMTP', :smtp_auth_type,
+        :login
+      o 'Port of the SMTP Server', :smtp_port,
+        25
+      o 'Prefix this to every subject', :subject_prefix,
+        "[#{title}]"
+    end
   end
-
-  mail do
-    # These settings should be changed
-    smtp_server      "localhost" # "smtp.#{domain}"
-    smtp_helo_domain domain
-    smtp_username    nil # "user"
-    smtp_password    nil # "pass"
-    sender_address   "no-reply@#{domain}"
-
-    # Optional, set to defaults
-    # NOTE: keep them in sync with the options in contrib/email
-    bcc_addresses  [ "admin@#{domain}" ]
-    id_generator   lambda{ "<#{Time.now.to_i}@#{smtp_helo_domain}>" }
-    sender_full    "MailBot <#{sender_address}>"
-    smtp_auth_type nil # :login
-    smtp_port      25
-    subject_prefix "[#{title}]"
-  end
-}
-
-require 'ramaze/contrib/email'
-m = conf.mail
-
-Ramaze::EmailHelper.trait.each do |key, value|
-  Ramaze::EmailHelper.trait key => m.send(key)
 end
-
-handle_error = Ramaze::Dispatcher::Error::HANDLE_ERROR
-handle_error.clear
-handle_error.merge!(
-  Object                  => [500, '/error/internal_server_error'],
-  Ramaze::Error::NoAction => [404, '/error/not_found']
-)
