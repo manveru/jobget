@@ -8,6 +8,7 @@ require 'ramaze'
 
 Ramaze.setup do
   gem 'sequel', '=2.12.0'
+  gem 'haml', '=2.0.9'
   gem 'faker'
   gem 'maruku'
   gem 'image_science'
