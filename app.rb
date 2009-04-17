@@ -7,7 +7,7 @@ require 'rubygems'
 require 'ramaze'
 
 Ramaze.setup do
-  gem 'sequel'
+  gem 'sequel', '=2.12.0'
   gem 'faker'
   gem 'maruku'
   gem 'image_science'
