@@ -14,6 +14,8 @@ Ramaze.setup do
   gem 'image_science'
 end
 
+require 'sequel/extensions/pagination'
+
 # Contrib
 require 'ramaze/contrib/email'
 require 'ramaze/contrib/sequel/image'
